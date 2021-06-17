@@ -23,7 +23,7 @@ jobs:
     - name: Lint
       run: cd clientapp && npm ci --prefer-offline && npm run lint
     - name: Build
-      run: npm run build:production
+      run: cd clientapp && npm run build:production
     - name: Test
-      run: npm run test
+      run: cd clientapp && npm run test
 
