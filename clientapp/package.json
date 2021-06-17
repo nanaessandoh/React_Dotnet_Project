@@ -23,7 +23,7 @@
     "build:watch": "react-scripts build -- --watch",
     "build:profile": "react-scripts build -- --profile",
     "build:analyzer": "react-scripts build -- --analyzer",
-    "test": "react-scripts test",
+    "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --ext jsx --ext tsx --ext js --ext ts",
     "lint:fix": "eslint --fix ./src --ext jsx --ext tsx --ext js --ext ts"
