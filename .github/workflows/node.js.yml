@@ -20,9 +20,8 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd clientapp
     - name: Lint
-      run: npm install && npm run eslint
+      run: cd clientapp && npm install && npm run eslint
     - name: Build
       run: npm run build:production
     - name: Test
