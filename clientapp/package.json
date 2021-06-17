@@ -53,13 +53,6 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-react": "^7.24.0",
-    "husky": "^6.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run eslint",
-      "pre-push": "npm run test && ../../../React_DotNet_Project.sln --framework net5.0"
-    }
+    "eslint-plugin-react": "^7.24.0"
   }
 }
