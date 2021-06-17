@@ -25,6 +25,7 @@
     ],
     "rules": {
         "semi": [2, "always"],
+        "camelcase": "error",
         "quotes": ["error", "single"],
         "space-before-function-paren": ["error", {
             "anonymous": "always",
