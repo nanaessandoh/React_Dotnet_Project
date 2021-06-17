@@ -1,0 +1,42 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jest": true,
+        "node": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "standard"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true,
+            "tsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "semi": [2, "always"],
+        "quotes": ["error", "single"],
+        "space-before-function-paren": ["error", {
+            "anonymous": "always",
+            "named": "always",
+            "asyncArrow": "always"
+        }],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"]
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    }
+}
