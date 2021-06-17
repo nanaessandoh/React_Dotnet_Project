@@ -19,6 +19,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:production": "react-scripts build -- --prod",
+    "build:watch": "react-scripts build -- --watch",
+    "build:profile": "react-scripts build -- --profile",
+    "build:analyzer": "react-scripts build -- --analyzer",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint ./src --ext jsx --ext tsx --ext js --ext ts",
