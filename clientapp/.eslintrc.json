@@ -34,8 +34,8 @@
         }],
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": ["error"],
-        "eol-last": ["error", "never"],
-        "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }]
+        "eol-last": ["error", "never"]
+
     },
     "settings": {
         "react": {
