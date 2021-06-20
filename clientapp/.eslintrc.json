@@ -33,7 +33,9 @@
             "asyncArrow": "always"
         }],
         "no-use-before-define": "off",
-        "@typescript-eslint/no-use-before-define": ["error"]
+        "@typescript-eslint/no-use-before-define": ["error"],
+        "eol-last": ["error", "never"],
+        "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }]
     },
     "settings": {
         "react": {
