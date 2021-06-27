@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -10,44 +11,40 @@ namespace API.Controllers
     public abstract class BaseApiController<TController> : ControllerBase
     where TController : BaseApiController<TController>
     {
-        private readonly ILogger<TController> logger;
-        public BaseApiController(ILogger<TController> logger)
+        private readonly ILogger<TController> _logger;
+
+        private readonly IMediator _mediator;
+
+        protected IMediator Mediator => _mediator;
+
+        public BaseApiController(ILogger<TController> logger, IMediator mediator)
         {
-            this.logger = logger;
+            _logger = logger;
+            _mediator = mediator;
         }
 
         public IActionResult Try(Func<IActionResult> function)
         {
-            if (function is null)
-            {
-                throw new ArgumentNullException(nameof(function));
-            }
-
             try
             {
                 return function();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occured in the API");
+                _logger.LogError(ex, "An error occured in the API");
                 throw;
             }
         }
 
         public async Task<IActionResult> TryAsync(Func<Task<IActionResult>> asyncFunction)
         {
-            if (asyncFunction is null)
-            {
-                throw new ArgumentNullException(nameof(asyncFunction));
-            }
-
             try
             {
                 return await asyncFunction();
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occured in the API");
+                _logger.LogError(ex, "An error occured in the API");
                 throw;
             }
         }
