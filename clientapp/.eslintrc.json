@@ -25,17 +25,8 @@
     ],
     "rules": {
         "quotes": ["error", "single"],
-        // "space-before-function-paren": ["error", {
-        //     "anonymous": "always",
-        //     "named": "always",
-        //     "asyncArrow": "always"
-        // }],
-        // "no-use-before-define": "off",
-        // "@typescript-eslint/no-use-before-define": ["error"],
         "eol-last": ["error", "never"],
-        "indent": ["error", 4, {
-            "SwitchCase": 1
-        }],
+        "indent": "off",
         "comma-dangle": ["error",{
             "arrays": "never",
             "objects": "always-multiline"
@@ -72,16 +63,8 @@
                 "var": "always"
             }
         ],
-        "no-console": [
-            "error",
-            {
-                "allow": [
-                    "warn",
-                    "error"
-                ]
-            }
-        ],
-        "no-undef": "error",
+        "no-console": "off",
+        "no-undef": "off",
         "no-unused-vars": "error",
         "semi": "error",
         "camelcase": "error",
@@ -111,8 +94,6 @@
         "react/require-render-return": "error",
         "react/no-did-mount-set-state": "error",
         "no-irregular-whitespace": "error",
-        "react-hooks/rules-of-hooks": "error",
-        "react-hooks/exhaustive-deps": "error",
         "react/display-name": "off",
         "require-await": "error",
         "no-restricted-syntax": [

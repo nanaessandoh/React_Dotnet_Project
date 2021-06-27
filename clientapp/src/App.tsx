@@ -3,7 +3,7 @@ import './App.css';
 import axios from 'axios';
 import { Header, List } from 'semantic-ui-react';
 
-function App () {
+function App(): JSX.Element {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
@@ -28,10 +28,10 @@ function App () {
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
         <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+          className='App-link'
+          href='https://reactjs.org'
+          target='_blank'
+          rel='noopener noreferrer'
         >
           Learn React
         </a>
