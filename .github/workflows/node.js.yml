@@ -21,9 +21,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Lint
-      run: cd clientapp && npm ci --prefer-offline && npm run lint
+      run: cd Clientapp && npm ci --prefer-offline && npm run lint
     - name: Build
-      run: cd clientapp && npm run build:production
+      run: cd Clientapp && npm run build:production
     - name: Test
-      run: cd clientapp && npm run test
+      run: cd Clientapp && npm run test
 
