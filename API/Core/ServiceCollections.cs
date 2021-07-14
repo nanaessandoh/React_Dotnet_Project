@@ -14,6 +14,10 @@ namespace API.Core
         public static IServiceCollection AddMediatRProfiles(this IServiceCollection services)
         {
             services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddMediatR(typeof(Create.Handler).Assembly);
+            services.AddMediatR(typeof(Delete.Handler).Assembly);
+            services.AddMediatR(typeof(Details.Handler).Assembly);
+            services.AddMediatR(typeof(Edit.Handler).Assembly);
             return services;
         }
 
