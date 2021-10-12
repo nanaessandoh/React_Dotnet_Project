@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import { Activity } from '../models/activity';
 import axios from 'axios';
+import {v4 as uuid} from 'uuid';
 
 export default function App(): JSX.Element {
     const [activities, setActivities] = useState<Activity[]>([]);
@@ -37,16 +38,20 @@ export default function App(): JSX.Element {
     function handleCreateOrEditActivity (activity: Activity): void {
         activity.id
         ? setActivities([...activities.filter(x => x.id !== activity.id), activity]) //Edit
-        : setActivities([...activities, activity]); //Create
+        : setActivities([...activities, {...activity, id: uuid()}]); //Create
         setEditMode(false);
         setSelectedActivity(activity);
+    }
+
+    function handleDeleteActivity(id: string): void {
+        setActivities([...activities.filter(x => x.id !== id)]);
     }
 
     return (
         <>
             <NavBar openForm={handleFormOpen} />
             <Container style={{marginTop: '7em'}}>
-                <ActivityDashboard 
+                <ActivityDashboard
                     activities={ activities }
                     selectedActivity={selectedActivity}
                     selectActivity={handleSelectActivity}
@@ -55,6 +60,7 @@ export default function App(): JSX.Element {
                     openForm={handleFormOpen}
                     closeForm={handleFormClose}
                     createOrEdit={handleCreateOrEditActivity}
+                    deleteActivity={handleDeleteActivity}
                 />
             </Container>
         </>
