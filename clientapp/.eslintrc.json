@@ -3,7 +3,8 @@
         "browser": true,
         "es6": true,
         "jest": true,
-        "node": true
+        "node": true,
+        "commonjs": true
     },
     "extends": [
         "eslint:recommended",
@@ -24,8 +25,10 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "quotes": "off",
-        "@typescript-eslint/quotes": "off",
+        "quotes": [
+            "error",
+            "single"
+        ],
         "eol-last": ["error", "never"],
         "indent": "off",
         "comma-dangle": ["error",{
@@ -52,7 +55,7 @@
                 "after": true
             }
         ],
-        "vars-on-top": "error",
+        "vars-on-top": "warn",
         "prefer-template": "error",
         "one-var": [
             "error",
@@ -60,9 +63,9 @@
                 "var": "always"
             }
         ],
-        "no-console": "off",
+        "no-console": "warn",
         "no-undef": "off",
-        "no-unused-vars": "error",
+        "no-unused-vars": "warn",
         "semi": "off",
         "camelcase": "error",
         "no-unreachable": "error",
@@ -94,15 +97,15 @@
         "react/display-name": "off",
         "require-await": "error",
         "no-restricted-syntax": [
-            "error",
+            "warn",
             {
             "selector": ":matches(JSXElement, JSXFragment) > JSXExpressionContainer > LogicalExpression[operator!='??']",
             "message": "Please use ternary operator instead"
             }
-        ]
-        // "@typescript-eslint/explicit-function-return-type": ["error", {
-        //     "allowExpressions": true
-        // }]
+        ],
+        "@typescript-eslint/explicit-function-return-type": ["warn", {
+            "allowExpressions": true
+        }]
     },
     "settings": {
         "react": {
