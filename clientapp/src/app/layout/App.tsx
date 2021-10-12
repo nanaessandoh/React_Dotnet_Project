@@ -26,12 +26,12 @@ export default function App(): JSX.Element {
         setSelectedActivity(undefined);
     }
 
-    function handleFormOpen(id?: string ) : void {
+    function handleFormOpen(id?: string): void {
         id ? handleSelectActivity(id) : handleCancelSelectActivity();
         setEditMode(true);
     }
 
-    function handleFormClose() {
+    function handleFormClose(): void {
         setEditMode(false);
     }
 
