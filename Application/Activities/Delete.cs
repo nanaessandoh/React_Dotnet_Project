@@ -29,6 +29,11 @@ namespace Application.Activities
 
                 return Unit.Value;
             }
+
+            Task IRequestHandler<Command>.Handle(Command request, CancellationToken cancellationToken)
+            {
+                return Handle(request, cancellationToken);
+            }
         }
     }
 }

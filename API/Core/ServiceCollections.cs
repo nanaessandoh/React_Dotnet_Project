@@ -1,6 +1,4 @@
-using Application.Activities;
 using MapsterMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +11,11 @@ namespace API.Core
     {
         public static IServiceCollection AddMediatRProfiles(this IServiceCollection services)
         {
-            services.AddMediatR(typeof(List.Handler).Assembly);
-            services.AddMediatR(typeof(Create.Handler).Assembly);
-            services.AddMediatR(typeof(Delete.Handler).Assembly);
-            services.AddMediatR(typeof(Details.Handler).Assembly);
-            services.AddMediatR(typeof(Edit.Handler).Assembly);
+            services.AddMediatR(cfg =>
+            {
+                cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly);
+            });
+
             return services;
         }
 
@@ -33,7 +31,7 @@ namespace API.Core
 
         public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration config)
         {
-            services.AddDbContext<AppDbContext>( options =>
+            services.AddDbContext<IAppDbContext, AppDbContext>(options =>
             {
                 options.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
@@ -43,7 +41,8 @@ namespace API.Core
 
         public static IServiceCollection AddCorsForFE(this IServiceCollection services)
         {
-            services.AddCors(options => {
+            services.AddCors(options =>
+            {
                 options.AddPolicy("CorsPolicy", policy =>
                 {
                     policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");

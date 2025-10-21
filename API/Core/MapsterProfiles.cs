@@ -1,4 +1,6 @@
-using Domain;
+using Read = Domain.Read;
+using Write = Domain.Write;
+using Entities = Domain.Entities;
 using Mapster;
 
 namespace API.Core
@@ -9,7 +11,16 @@ namespace API.Core
         {
             var config = new TypeAdapterConfig();
 
-            config.NewConfig<Activity, Activity>();
+            config.NewConfig<Write.Activity, Entities.Activity>()
+                .IgnoreIfNotIncluded(dest => dest.Id)
+                .IgnoreIfNotIncluded(dest => dest.Title)
+                .IgnoreIfNotIncluded(dest => dest.Date)
+                .IgnoreIfNotIncluded(dest => dest.Description)
+                .IgnoreIfNotIncluded(dest => dest.Category)
+                .IgnoreIfNotIncluded(dest => dest.City)
+                .IgnoreIfNotIncluded(dest => dest.Venue);
+
+            config.NewConfig<Entities.Activity, Read.Activity>();
 
             return config;
         }

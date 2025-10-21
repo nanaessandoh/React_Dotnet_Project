@@ -35,14 +35,14 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
-
-            app.UseHttpsRedirection();
+            // Global exception handling middleware (always use in pipeline)
+            app.UseMiddleware<Middleware.ExceptionRequestMiddleware>();
 
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

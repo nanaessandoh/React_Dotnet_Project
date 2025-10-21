@@ -1,12 +1,23 @@
-using Domain;
+using Entities = Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IAppDbContext
     {
-        public AppDbContext(DbContextOptions options) : base(options){ }
+        public AppDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Activity> Activities { get; set; }
+        public DbSet<Entities.Activity> Activities { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Entities.Activity>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+        }
     }
 }

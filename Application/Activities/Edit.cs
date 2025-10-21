@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Domain;
+using Write = Domain.Write;
 using MapsterMapper;
 using MediatR;
 using Persistence;
@@ -11,7 +11,7 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
-            public Activity Activity { get; set; }
+            public Write.Activity Activity { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -33,6 +33,11 @@ namespace Application.Activities
                 await _context.SaveChangesAsync();
 
                 return Unit.Value;
+            }
+
+            Task IRequestHandler<Command>.Handle(Command request, CancellationToken cancellationToken)
+            {
+                return Handle(request, cancellationToken);
             }
         }
     }

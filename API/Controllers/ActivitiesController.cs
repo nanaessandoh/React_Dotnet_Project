@@ -1,10 +1,10 @@
-using System;
-using System.Threading.Tasks;
 using Application.Activities;
-using Domain;
+using Write = Domain.Write;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
+using System;
 
 namespace API.Controllers
 {
@@ -31,26 +31,28 @@ namespace API.Controllers
         {
             return await TryAsync(async () =>
             {
-                return Ok(await Mediator.Send(new Details.Query{Id = id}));
+                return Ok(await Mediator.Send(new Details.Query { Id = id }));
             });
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateActivity([FromBody] Activity activity)
+        public async Task<IActionResult> CreateActivity([FromBody] Write.Activity activity)
         {
             return await TryAsync(async () =>
             {
-                return Ok(await Mediator.Send(new Create.Command {Activity = activity}));
+                await Mediator.Send(new Create.Command { Activity = activity });
+                return Ok();
             });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> EditActivity(Guid id, [FromBody] Activity activity)
+        public async Task<IActionResult> EditActivity(Guid id, [FromBody] Write.Activity activity)
         {
             return await TryAsync(async () =>
             {
                 activity.Id = id;
-                return Ok(await Mediator.Send(new Edit.Command {Activity = activity}));
+                await Mediator.Send(new Edit.Command { Activity = activity });
+                return Ok();
             });
         }
 
@@ -59,7 +61,8 @@ namespace API.Controllers
         {
             return await TryAsync(async () =>
             {
-                return Ok(await Mediator.Send(new Delete.Command {Id = id}));
+                await Mediator.Send(new Delete.Command { Id = id });
+                return Ok();
             });
         }
     }

@@ -1,31 +1,35 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain;
+using Read = Domain.Read;
 using MediatR;
 using Persistence;
+using MapsterMapper;
 
 namespace Application.Activities
 {
     public class Details
     {
-        public class Query : IRequest<Activity>
+        public class Query : IRequest<Read.Activity>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Activity>
+        public class Handler : IRequestHandler<Query, Read.Activity>
         {
             private readonly AppDbContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(AppDbContext contex)
+            public Handler(AppDbContext contex, IMapper mapper)
             {
                 _context = contex;
+                _mapper = mapper;
             }
 
-            public async Task<Activity> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Read.Activity> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Activities.FindAsync(request.Id);
+                var activity = await _context.Activities.FindAsync(request.Id);
+                return _mapper.Map<Read.Activity>(activity);
             }
         }
     }
