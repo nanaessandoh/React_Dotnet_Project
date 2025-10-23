@@ -5,6 +5,8 @@ import { defineConfig } from "eslint/config";
 import pluginReact from "eslint-plugin-react";
 
 export default defineConfig([
+  // Exclude Vite config from linting (tooling file)
+  { ignores: ["**/vite.config.*", "**/setupTests.*"] },
   {
     files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
     plugins: { js },
