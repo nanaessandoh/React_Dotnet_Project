@@ -8,7 +8,7 @@ describe('App Component', () => {
     const headingElement = screen.getByText(/Vite \+ React/i);
     expect(headingElement).toBeInTheDocument();
     // prints out the jsx in the App component unto the command line
-    screen.debug();
+    // screen.debug();
   });
 });
 
