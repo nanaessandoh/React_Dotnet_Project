@@ -5,10 +5,8 @@ import App from '../App';
 describe('App Component', () => {
   it('renders Vite + React heading', () => {
     render(<App />);
-    const headingElement = screen.getByText(/Vite \+ React/i);
+    const headingElement = screen.getByText(/Reactivities/i);
     expect(headingElement).toBeInTheDocument();
-    // prints out the jsx in the App component unto the command line
-    // screen.debug();
   });
 });
 
