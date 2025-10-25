@@ -18,7 +18,7 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerUI();
             services.AddDatabaseContext(_config);
@@ -40,7 +40,9 @@ namespace API
 
             app.UseRouting();
 
-            app.UseCors("CorsPolicy");
+            app.UseCors(x => x.AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .WithOrigins("http://localhost:3000", "https://localhost:3000"));
 
             //app.UseAuthorization();
 

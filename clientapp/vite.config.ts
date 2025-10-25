@@ -1,10 +1,10 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react-swc'
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react-swc';
 
 export default defineConfig({
   server: {
-    port: 3000,
+    port: 3000
   },
   plugins: [react()],
   test: {

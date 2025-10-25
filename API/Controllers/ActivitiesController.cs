@@ -5,16 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
+using Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController<ActivitiesController>
     {
+        private readonly IAppDbContext _context;
 
-        public ActivitiesController(ILogger<ActivitiesController> logger, IMediator mediator)
+        public ActivitiesController(ILogger<ActivitiesController> logger, IMediator mediator, IAppDbContext context)
         : base(logger, mediator)
         {
-
+            _context = context;
         }
 
         [HttpGet]
@@ -22,7 +25,8 @@ namespace API.Controllers
         {
             return await TryAsync(async () =>
             {
-                return Ok(await Mediator.Send(new List.Query()));
+                return Ok(await _context.Activities.AsNoTracking().ToListAsync());
+                //return Ok(await Mediator.Send(new List.Query()));
             });
         }
 
