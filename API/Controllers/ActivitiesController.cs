@@ -1,72 +1,66 @@
-using Application.Activities;
 using Write = Domain.Write;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
-using Persistence;
-using Microsoft.EntityFrameworkCore;
+using Application.Activities.Queries;
+using Application.Activities.Commands;
+using System.Threading;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController<ActivitiesController>
     {
-        private readonly IAppDbContext _context;
 
-        public ActivitiesController(ILogger<ActivitiesController> logger, IMediator mediator, IAppDbContext context)
-        : base(logger, mediator)
-        {
-            _context = context;
-        }
+        public ActivitiesController(ILogger<ActivitiesController> logger, IMediator mediator)
+        : base(logger, mediator) { }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
             {
-                return Ok(await _context.Activities.AsNoTracking().ToListAsync());
-                //return Ok(await Mediator.Send(new List.Query()));
+                return Ok(await mediator.Send(new GetAllActivities.Query(), cancellationToken));
             });
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetActivity(Guid id)
+        [HttpGet("{id}", Name = "Get")]
+        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
             {
-                return Ok(await Mediator.Send(new Details.Query { Id = id }));
+                return Ok(await mediator.Send(new GetActivityDetails.Query { Id = id }, cancellationToken));
             });
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateActivity([FromBody] Write.Activity activity)
+        public async Task<IActionResult> Create([FromBody] Write.Activity activity, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
             {
-                await Mediator.Send(new Create.Command { Activity = activity });
-                return Ok();
+                var activityResponse = await mediator.Send(new CreateActivity.Command { Activity = activity }, cancellationToken);
+                return CreatedAtRoute(nameof(Get), new { Id = activityResponse.Id }, activityResponse);
             });
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditActivity(Guid id, [FromBody] Write.Activity activity)
+        [HttpPatch()]
+        public async Task<IActionResult> Edit([FromBody] Write.Activity activity, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
             {
-                activity.Id = id;
-                await Mediator.Send(new Edit.Command { Activity = activity });
-                return Ok();
+                await mediator.Send(new EditActivity.Command { Activity = activity }, cancellationToken);
+                return NoContent();
             });
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> EditActivity(Guid id)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
             {
-                await Mediator.Send(new Delete.Command { Id = id });
-                return Ok();
+                await mediator.Send(new DeleteActivity.Command { Id = id }, cancellationToken);
+                return NoContent();
             });
         }
     }

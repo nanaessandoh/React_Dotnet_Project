@@ -1,3 +1,4 @@
+using Application.Activities.Queries;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,7 @@ namespace API.Core
         {
             services.AddMediatR(cfg =>
             {
-                cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(GetAllActivities).Assembly);
             });
 
             return services;

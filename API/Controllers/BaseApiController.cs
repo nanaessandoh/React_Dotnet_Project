@@ -14,8 +14,7 @@ namespace API.Controllers
         private readonly ILogger<TController> _logger;
 
         private readonly IMediator _mediator;
-
-        protected IMediator Mediator => _mediator;
+        protected IMediator mediator => _mediator;
 
         public BaseApiController(ILogger<TController> logger, IMediator mediator)
         {

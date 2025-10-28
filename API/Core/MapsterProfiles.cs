@@ -12,13 +12,15 @@ namespace API.Core
             var config = new TypeAdapterConfig();
 
             config.NewConfig<Write.Activity, Entities.Activity>()
-                .IgnoreIfNotIncluded(dest => dest.Id)
                 .IgnoreIfNotIncluded(dest => dest.Title)
                 .IgnoreIfNotIncluded(dest => dest.Date)
                 .IgnoreIfNotIncluded(dest => dest.Description)
                 .IgnoreIfNotIncluded(dest => dest.Category)
+                .IgnoreIfNotIncluded(dest => dest.IsCancelled)
                 .IgnoreIfNotIncluded(dest => dest.City)
-                .IgnoreIfNotIncluded(dest => dest.Venue);
+                .IgnoreIfNotIncluded(dest => dest.Venue)
+                .IgnoreIfNotIncluded(dest => dest.Latitude)
+                .IgnoreIfNotIncluded(dest => dest.Longitude);
 
             config.NewConfig<Entities.Activity, Read.Activity>();
 
