@@ -5,7 +5,7 @@ import { defineConfig } from "eslint/config";
 import pluginReact from "eslint-plugin-react";
 
 export default defineConfig([
-  { ignores: ["**/vite.config.*", "**/setupTests.*", "**/*.test.tsx", "**/*.test.ts"] },
+  { ignores: ["**/vite.config.*", "**/setupTests.*", "**/*.test.tsx", "**/*.test.ts", "node_modules/**", "dist/**"] },
   {
     files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
     plugins: { js },
