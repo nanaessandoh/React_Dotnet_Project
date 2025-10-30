@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Domain.Read
 {
     public class Activity
     {
-        [JsonPropertyName("ActivityId")]
+        [JsonPropertyName("activityId")]
         public Guid Id { get; set; }
         public required string Title { get; set; }
         public DateTime Date { get; set; }

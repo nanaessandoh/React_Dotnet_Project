@@ -1,5 +1,5 @@
 type Activity = {
-    id: string
+    activityId: string
     title: string
     date: string
     description: string

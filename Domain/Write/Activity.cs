@@ -12,7 +12,7 @@ namespace Domain.Write
         }
 
         private Guid _id;
-        [JsonPropertyName("ActivityId")]
+        [JsonPropertyName("activityId")]
         public Guid Id
         {
             get => _id;
