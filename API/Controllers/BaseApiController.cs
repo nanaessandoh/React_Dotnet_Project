@@ -22,6 +22,8 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
+        [NonAction]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Try(Func<IActionResult> function)
         {
             try
@@ -35,6 +37,8 @@ namespace API.Controllers
             }
         }
 
+        [NonAction]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<IActionResult> TryAsync(Func<Task<IActionResult>> asyncFunction)
         {
             try

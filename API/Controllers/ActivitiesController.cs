@@ -12,9 +12,10 @@ namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController<ActivitiesController>
     {
-
         public ActivitiesController(ILogger<ActivitiesController> logger, IMediator mediator)
-        : base(logger, mediator) { }
+        : base(logger, mediator)
+        {
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -40,12 +41,12 @@ namespace API.Controllers
             return await TryAsync(async () =>
             {
                 var activityResponse = await mediator.Send(new CreateActivity.Command { Activity = activity }, cancellationToken);
-                return CreatedAtRoute(nameof(Get), new { Id = activityResponse.Id }, activityResponse);
+                return CreatedAtRoute(nameof(Get), new { activityResponse.Id }, activityResponse);
             });
         }
 
-        [HttpPatch()]
-        public async Task<IActionResult> Edit([FromBody] Write.Activity activity, CancellationToken cancellationToken)
+        [HttpPatch]
+        public async Task<IActionResult> Edit(Guid id, [FromBody] Write.Activity activity, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
             {

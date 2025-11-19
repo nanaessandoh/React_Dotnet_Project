@@ -5,10 +5,9 @@ import { Box } from '@mui/material';
 type Props = {
     activities: Activity[];
     onSelectActivity: (id: string) => void;
-    deleteActivity: (id: string) => void;
 }
 
-const ActivityList = ({ activities, onSelectActivity, deleteActivity }: Props) => {
+const ActivityList = ({ activities, onSelectActivity }: Props) => {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             {activities.map((activity) => (
@@ -16,7 +15,6 @@ const ActivityList = ({ activities, onSelectActivity, deleteActivity }: Props) =
                     key={activity.activityId}
                     activity={activity}
                     onSelectActivity={onSelectActivity}
-                    deleteActivity={deleteActivity}
                 />
             ))}
         </Box>
