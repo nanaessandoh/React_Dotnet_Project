@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router';
 
 type InitialQuery = {
     queryKey: readonly unknown[];
@@ -19,7 +20,9 @@ export function renderWithClient(ui: React.ReactElement, options?: { initialQuer
     });
 
     const wrapper = ({ children }: { children?: React.ReactNode }) => (
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+            <MemoryRouter>{children}</MemoryRouter>
+        </QueryClientProvider>
     );
 
     return { ...render(ui, { wrapper }), queryClient };
