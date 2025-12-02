@@ -1,13 +1,13 @@
-import React, { type FormEvent } from 'react';
+import { type FormEvent } from 'react';
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { useActivities } from '../../../lib/hooks/useActivities';
+import { useNavigate, useParams } from 'react-router';
 
-type Props = {
-    activity?: Activity;
-    closeForm: () => void;
-}
-const ActivityForm = ({ activity, closeForm }: Props) => {
-    const { createActivity, updateActivity } = useActivities();
+
+const ActivityForm = () => {
+    const navigate = useNavigate();
+    const { activityId } = useParams();
+    const { createActivity, updateActivity, activity, isLoadingActivity } = useActivities(activityId);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -20,17 +20,23 @@ const ActivityForm = ({ activity, closeForm }: Props) => {
         if (activity) {
             data['activityId'] = activity.activityId;
             await updateActivity.mutateAsync(data as unknown as Activity);
-            closeForm();
+            navigate(`/activities/${activity.activityId}`);
         } else {
-            await createActivity.mutateAsync(data as unknown as Activity);
-            closeForm();
+            createActivity.mutate(data as unknown as Activity, {
+                onSuccess: (newActivity) => {
+                    navigate(`/activities/${(newActivity as Activity).activityId}`);
+                }
+            });
         }
     }
+
+    if (isLoadingActivity)
+        return (<Typography>Loading...</Typography>)
 
     return (
         <Paper sx={{ borderRadius: 3, p: 3 }}>
             <Typography variant="h5" gutterBottom color="primary">
-                Create Activity
+                {activity ? 'Edit Activity' : 'Create Activity'}
             </Typography>
             <Box component="form" display="flex" flexDirection="column" gap={3} autoComplete="off" onSubmit={handleSubmit}>
                 <TextField name="title" label="Title" defaultValue={activity?.title} fullWidth />
@@ -45,7 +51,7 @@ const ActivityForm = ({ activity, closeForm }: Props) => {
                     <Button type="submit" variant="contained" color="success" disabled={createActivity.isPending || updateActivity.isPending}>
                         Submit
                     </Button>
-                    <Button variant="outlined" color="inherit" onClick={closeForm}>
+                    <Button variant="outlined" color="inherit">
                         Cancel
                     </Button>
                 </Box>

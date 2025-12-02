@@ -1,24 +1,23 @@
-import React from 'react'
 import ActivityCard from './ActivityCard';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { useActivities } from '../../../lib/hooks/useActivities';
 
-type Props = {
-    activities: Activity[];
-    onSelectActivity: (id: string) => void;
-}
+const ActivityList = () => {
+    const { activities, isPending } = useActivities();
 
-const ActivityList = ({ activities, onSelectActivity }: Props) => {
-    return (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            {activities.map((activity) => (
-                <ActivityCard
-                    key={activity.activityId}
-                    activity={activity}
-                    onSelectActivity={onSelectActivity}
-                />
-            ))}
-        </Box>
-    )
+    return !activities && isPending
+        ? (
+            <Typography>Loading...</Typography>)
+        : (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                {activities && activities.map((activity) => (
+                    <ActivityCard
+                        key={activity.activityId}
+                        activity={activity}
+                    />
+                ))}
+            </Box>
+        )
 }
 
 export default ActivityList
