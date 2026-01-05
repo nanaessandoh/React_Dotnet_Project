@@ -65,7 +65,7 @@ const ActivityDetailsHeader = ({ activity }: Props) => {
                                 variant="contained"
                                 color="primary"
                                 component={Link}
-                                to={`/manage/activityId`}
+                                to={`/manage/${activity.activityId}`}
                                 disabled={isCancelled}
                             >
                                 Manage Event
