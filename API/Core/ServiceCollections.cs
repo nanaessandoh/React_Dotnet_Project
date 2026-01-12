@@ -1,4 +1,6 @@
 using Application.Activities.Queries;
+using Application.Activities.Validators;
+using FluentValidation;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -57,6 +59,13 @@ namespace API.Core
         {
             services.AddSingleton(MapsterProfiles.GetMapsterConfig());
             services.AddScoped<IMapper, ServiceMapper>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddValidators(this IServiceCollection services)
+        {
+            services.AddValidatorsFromAssemblyContaining<ActivityValidator>();
 
             return services;
         }

@@ -6,6 +6,8 @@ using Read = Domain.Read;
 using Persistence;
 using MapsterMapper;
 using System.Threading;
+using FluentValidation;
+using Application.Extensions;
 
 namespace Application.Activities.Commands
 {
@@ -20,16 +22,19 @@ namespace Application.Activities.Commands
         {
             private readonly IAppDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IValidator<Write.Activity> _validator;
 
-            public Handler(AppDbContext context, IMapper mapper)
+            public Handler(AppDbContext context, IMapper mapper, IValidator<Write.Activity> validator)
             {
                 _context = context;
                 _mapper = mapper;
+                _validator = validator;
             }
 
             public async Task<Read.Activity> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = request.Activity;
+                var validationResult = await _validator.ValidateAndThrowAsync(activity, Domain.Validations.RuleSet.Create, cancellationToken);
                 var activityEntity = _mapper.Map<Entity.Activity>(activity);
                 await _context.Activities.AddAsync(activityEntity, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);

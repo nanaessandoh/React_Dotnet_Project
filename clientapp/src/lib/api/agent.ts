@@ -31,6 +31,9 @@ agent.interceptors.response.use(async response => {
             case 401:
                 console.log('Unauthorized', data);
                 break;
+            case 403:
+                console.log('Forbidden', data);
+                break;
             case 404:
                 console.log('Not Found', data);
                 break;

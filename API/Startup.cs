@@ -25,6 +25,7 @@ namespace API
             services.AddCorsForFE();
             services.AddMediatRProfiles();
             services.AddMappingProfiles();
+            services.AddValidators();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
