@@ -5,6 +5,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Persistence;
+using Application.Exceptions;
 
 namespace Application.Activities.Queries
 {
@@ -32,7 +33,7 @@ namespace Application.Activities.Queries
 
                 if (activity == null)
                 {
-                    throw new Exception("Activity not found");
+                    throw new NotFoundException("Activity not found");
                 }
 
                 return _mapper.Map<Read.Activity>(activity);

@@ -1,5 +1,7 @@
 using Entities = Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Persistence
 {
@@ -18,6 +20,18 @@ namespace Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
+        }
+
+        public new async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            int rowAffected = await base.SaveChangesAsync(cancellationToken);
+            return rowAffected > 0;
+        }
+
+        public new bool SaveChanges()
+        {
+            int rowAffected = base.SaveChanges();
+            return rowAffected > 0;
         }
     }
 }

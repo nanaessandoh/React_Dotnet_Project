@@ -36,8 +36,8 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
-            // Global exception handling middleware (always use in pipeline)
-            app.UseMiddleware<Middleware.ExceptionRequestMiddleware>();
+
+            app.UseMiddleware<Middleware.ExceptionHandlerMiddleware>();
 
             app.UseRouting();
 

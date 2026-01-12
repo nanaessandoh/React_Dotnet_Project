@@ -8,6 +8,7 @@ using MapsterMapper;
 using System.Threading;
 using FluentValidation;
 using Application.Extensions;
+using Application.Exceptions;
 
 namespace Application.Activities.Commands
 {
@@ -34,10 +35,15 @@ namespace Application.Activities.Commands
             public async Task<Read.Activity> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = request.Activity;
-                var validationResult = await _validator.ValidateAndThrowAsync(activity, Domain.Validations.RuleSet.Create, cancellationToken);
+                await _validator.ValidateAndThrowAsync(activity, Domain.Validations.RuleSet.Create, cancellationToken);
                 var activityEntity = _mapper.Map<Entity.Activity>(activity);
                 await _context.Activities.AddAsync(activityEntity, cancellationToken);
-                await _context.SaveChangesAsync(cancellationToken);
+                var result = await _context.SaveChangesAsync(cancellationToken);
+
+                if (!result)
+                {
+                    throw new BadRequestException("Failed to create activity");
+                }
 
                 return _mapper.Map<Read.Activity>(activityEntity);
             }

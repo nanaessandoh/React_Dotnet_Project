@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using MediatR;
 using Persistence;
 
@@ -29,11 +30,16 @@ namespace Application.Activities.Commands
 
                 if (activity == null)
                 {
-                    throw new Exception("Activity not found");
+                    throw new NotFoundException("Activity not found");
                 }
 
                 _context.Activities.Remove(activity);
-                await _context.SaveChangesAsync(cancellationToken);
+                var result = await _context.SaveChangesAsync(cancellationToken);
+
+                if (!result)
+                {
+                    throw new BadRequestException("Failed to delete activity");
+                }
             }
         }
 
