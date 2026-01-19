@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosError } from "axios";
 import { store } from "../stores/store";
+import { toast } from "react-toastify";
+import { router } from "../../app/router/Routes";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -16,38 +19,46 @@ agent.interceptors.request.use(config => {
     return config;
 });
 
-agent.interceptors.response.use(async response => {
-    try {
+agent.interceptors.response.use(
+    async response => {
         await sleep(1000);
+        store.uiStore.isIdle();
         return response;
-    } catch (error) {
-        const axiosError = error as AxiosError;
-        const data = axiosError.response?.data;
-        const status = axiosError.response?.status;
+    },
+    async (error: AxiosError) => {
+        await sleep(1000);
+        store.uiStore.isIdle();
+        const { status, data } = error.response as any
+
         switch (status) {
             case 400:
-                console.log('Bad Request', data);
+                if (data?.errors) {
+                    const modalStateErrors = [];
+                    for (const key in data.errors) {
+                        if (data.errors[key]) {
+                            modalStateErrors.push(data.errors[key]);
+                        }
+                    }
+                    throw modalStateErrors.flat();
+                } else {
+                    toast.error(data || "Bad Request");
+                }
                 break;
             case 401:
-                console.log('Unauthorized', data);
-                break;
-            case 403:
-                console.log('Forbidden', data);
+                toast.error("Unauthorized");
                 break;
             case 404:
-                console.log('Not Found', data);
+                router.navigate("/not-found");
                 break;
             case 500:
-                console.log('Server Error', data);
+                router.navigate("/server-error", { state: { error: data } });
                 break;
             default:
-                console.log('Unknown Error', data);
+                toast.error("Unknown Error");
                 break;
         }
-        return Promise.reject(error);
-    } finally {
-        store.uiStore.isIdle();
+        return Promise.reject(error.response?.data);
     }
-});
+);
 
 export default agent;

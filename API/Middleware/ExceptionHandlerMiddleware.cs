@@ -113,8 +113,7 @@ namespace API.Middleware
             response.ContentType = "application/json";
             response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            object? result = null;
-
+            object? result;
             if (_env.IsDevelopment())
             {
                 result = new
@@ -139,7 +138,7 @@ namespace API.Middleware
                 };
             }
 
-            return response.WriteAsJsonAsync(JsonSerializer.Serialize(result, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+            return response.WriteAsync(JsonSerializer.Serialize(result, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
         }
     }
 }
