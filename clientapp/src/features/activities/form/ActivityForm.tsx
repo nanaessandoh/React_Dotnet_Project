@@ -1,34 +1,36 @@
-import { type FormEvent } from 'react';
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { useEffect } from 'react';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import { useActivities } from '../../../lib/hooks/useActivities';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
+import { useForm } from 'react-hook-form';
+import { activitySchema, ActivitySchema } from '../../../lib/schemas/activitySchema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import TextInput from '../../../app/shared/components/TextInput';
+import SelectInput from '../../../app/shared/components/SelectInput';
+import { categoryOptions } from './categoryOptions';
+import DateTimeInput from '../../../app/shared/components/DateTimeInput';
 
 
 const ActivityForm = () => {
-    const navigate = useNavigate();
+    const { reset, handleSubmit, control } = useForm<ActivitySchema>({
+        mode: 'onTouched',
+        resolver: zodResolver(activitySchema)
+    });
     const { activityId } = useParams();
     const { createActivity, updateActivity, activity, isLoadingActivity } = useActivities(activityId);
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const data: { [key: string]: FormDataEntryValue } = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
+    const onSubmit = async (data: ActivitySchema) => {
+        console.log(data);
+    }
 
+    useEffect(() => {
         if (activity) {
-            data['activityId'] = activity.activityId;
-            await updateActivity.mutateAsync(data as unknown as Activity);
-            navigate(`/activities/${activity.activityId}`);
-        } else {
-            createActivity.mutate(data as unknown as Activity, {
-                onSuccess: (newActivity) => {
-                    navigate(`/activities/${(newActivity as Activity).activityId}`);
-                }
+            reset({
+                ...activity,
+                date: new Date(activity.date)
             });
         }
-    }
+    }, [activity, reset]);
 
     if (isLoadingActivity)
         return (<Typography>Loading...</Typography>)
@@ -38,15 +40,13 @@ const ActivityForm = () => {
             <Typography variant="h5" gutterBottom color="primary">
                 {activity ? 'Edit Activity' : 'Create Activity'}
             </Typography>
-            <Box component="form" display="flex" flexDirection="column" gap={3} autoComplete="off" onSubmit={handleSubmit}>
-                <TextField name="title" label="Title" defaultValue={activity?.title} fullWidth />
-                <TextField name="description" label="Description" defaultValue={activity?.description} fullWidth multiline rows={3} />
-                <TextField name="category" label="Category" defaultValue={activity?.category} fullWidth />
-                <TextField name="date" label="Date" defaultValue={activity?.date
-                    ? new Date(activity.date).toISOString().split("T")[0]
-                    : new Date().toISOString().split("T")[0]} type="date" variant="outlined" />
-                <TextField name="city" label="City" defaultValue={activity?.city} fullWidth />
-                <TextField name="venue" label="Venue" defaultValue={activity?.venue} fullWidth />
+            <Box component="form" display="flex" flexDirection="column" gap={3} autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
+                <TextInput label="Title" control={control} name="title" />
+                <TextInput label="Description" control={control} name="description" multiline rows={3} />
+                <SelectInput items={categoryOptions} label="Category" control={control} name="category" />
+                <DateTimeInput label="Date" control={control} name="date" />
+                <TextInput label="City" control={control} name="city" />
+                <TextInput label="Venue" control={control} name="venue" />
                 <Box display="flex" justifyContent="end" gap={3}>
                     <Button type="submit" variant="contained" color="success" disabled={createActivity.isPending || updateActivity.isPending}>
                         Submit
@@ -60,4 +60,5 @@ const ActivityForm = () => {
     )
 }
 
-export default ActivityForm
+export default ActivityForm;
+
