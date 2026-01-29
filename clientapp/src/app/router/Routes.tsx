@@ -8,11 +8,13 @@ import Counter from "../../features/counter/Counter";
 import TestErrors from "../../features/errors/TestErrors";
 import NotFound from "../../features/errors/NotFound";
 import ServerError from "../../features/errors/ServerError";
+import RouteError from "../../features/errors/RouteError";
 
 export const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
+        errorElement: <RouteError />,
         children: [
             {
                 path: "",
