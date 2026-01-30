@@ -23,7 +23,6 @@ const ActivityForm = () => {
     const navigate = useNavigate();
 
     const onSubmit = async (data: ActivitySchema) => {
-        console.log(data);
         const { location, ...activityData } = data;
         const flattendedData = { ...activityData, ...location } as Activity;
         try {
@@ -36,9 +35,8 @@ const ActivityForm = () => {
                     onSuccess: (createdActivity) => navigate(`/activities/${createdActivity.activityId}`)
                 });
             }
-
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 

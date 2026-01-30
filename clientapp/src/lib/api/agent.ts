@@ -39,7 +39,11 @@ agent.interceptors.response.use(
                             modalStateErrors.push(data.errors[key]);
                         }
                     }
-                    throw modalStateErrors.flat();
+                    const flattened = modalStateErrors.flat();
+                    for (const msg of flattened) {
+                        toast.error(msg);
+                    }
+                    throw flattened;
                 } else {
                     toast.error(data || "Bad Request");
                 }
