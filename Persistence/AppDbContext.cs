@@ -2,10 +2,14 @@ using Entities = Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Identity.Models;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Persistence
 {
-    public class AppDbContext : DbContext, IAppDbContext
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>, IAppDbContext
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
 

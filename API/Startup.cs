@@ -1,6 +1,11 @@
+using System.Net;
 using API.Core;
+using Identity.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,13 +24,20 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                 .RequireAuthenticatedUser()
+                                 .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
             services.AddSwaggerUI();
             services.AddDatabaseContext(_config);
             services.AddCorsForFE();
             services.AddMediatRProfiles();
             services.AddMappingProfiles();
             services.AddValidators();
+            services.AddIdentityServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,11 +57,13 @@ namespace API
                               .AllowAnyMethod()
                               .WithOrigins("http://localhost:3000", "https://localhost:3000"));
 
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGroup("api").MapIdentityApi<User>();
             });
         }
     }
