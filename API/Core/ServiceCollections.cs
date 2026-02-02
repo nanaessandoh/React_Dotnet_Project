@@ -1,7 +1,10 @@
+using System;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
 using FluentValidation;
+using Identity.Models;
 using MapsterMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -66,6 +69,20 @@ namespace API.Core
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
             services.AddValidatorsFromAssemblyContaining<ActivityValidator>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services)
+        {
+            services
+            .AddIdentityApiEndpoints<User>(opt =>
+            {
+                opt.User.RequireUniqueEmail = true;
+            })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
             return services;
         }
