@@ -18,7 +18,6 @@ namespace API.Controllers
         {
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {

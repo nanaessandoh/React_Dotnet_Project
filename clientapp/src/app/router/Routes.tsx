@@ -9,6 +9,7 @@ import TestErrors from "../../features/errors/TestErrors";
 import NotFound from "../../features/errors/NotFound";
 import ServerError from "../../features/errors/ServerError";
 import RouteError from "../../features/errors/RouteError";
+import LoginForm from "../../features/user/LoginForm";
 
 export const router = createBrowserRouter([
     {
@@ -53,9 +54,13 @@ export const router = createBrowserRouter([
                 element: <ServerError />
             },
             {
+                path: "login",
+                element: <LoginForm />
+            },
+            {
                 path: "*",
                 element: <Navigate replace to="/not-found" />
-            },
+            }
         ]
     },
 ]);
