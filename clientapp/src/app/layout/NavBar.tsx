@@ -4,10 +4,13 @@ import { NavLink } from 'react-router';
 import MenuItemLink from '../shared/components/MenuItemLink';
 import { useStore } from '../../lib/hooks/useStore';
 import { Observer } from 'mobx-react-lite';
+import { useUser } from '../../lib/hooks/useUser';
+import UserMenu from './UserMenu';
 
 
 export const NavBar = () => {
     const { uiStore } = useStore();
+    const { currentUser } = useUser();
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -29,9 +32,6 @@ export const NavBar = () => {
                             <MenuItemLink to={"/activities"}>
                                 Activities
                             </MenuItemLink>
-                            <MenuItemLink to={"/createActivity"}>
-                                Create Activity
-                            </MenuItemLink>
                             <MenuItemLink to={"/counter"}>
                                 Counter
                             </MenuItemLink>
@@ -39,9 +39,20 @@ export const NavBar = () => {
                                 Errors
                             </MenuItemLink>
                         </Box>
-                        <MenuItem sx={{ fontSize: "1.2rem", textTransform: "uppercase", fontWeight: "bold" }}>
-                            User menu
-                        </MenuItem>
+                        <Box display={"flex"} alignItems={"center"}>
+                            {currentUser ? (
+                                <UserMenu />
+                            ) : (
+                                <>
+                                    <MenuItemLink to={"/login"}>
+                                        Login
+                                    </MenuItemLink>
+                                    <MenuItemLink to={"/register"}>
+                                        Register
+                                    </MenuItemLink>
+                                </>
+                            )}
+                        </Box>
                     </Toolbar>
                 </Container>
                 <Observer>
