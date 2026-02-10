@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
+    [AllowAnonymous]
     public class UsersController : BaseApiController<UsersController>
     {
         private readonly SignInManager<Identity.Models.User> _signInManager;
@@ -47,7 +48,6 @@ namespace API.Controllers
             });
         }
 
-        [AllowAnonymous]
         [HttpGet("user-info")]
         public async Task<IActionResult> GetUserInfo()
         {

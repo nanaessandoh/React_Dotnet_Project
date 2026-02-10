@@ -30,10 +30,13 @@ agent.interceptors.response.use(
         await sleep(1000);
         store.uiStore.isIdle();
         const { status, data } = error.response as any
+        const requestUrl = error.config?.url;
 
         switch (status) {
             case 400:
                 if (data?.errors) {
+
+
                     const modalStateErrors = [];
                     for (const key in data.errors) {
                         if (data.errors[key]) {
@@ -41,9 +44,14 @@ agent.interceptors.response.use(
                         }
                     }
                     const flattened = modalStateErrors.flat();
-                    for (const msg of flattened) {
-                        toast.error(msg);
+
+                    // Allow registration errors to be handled in the form instead of showing a toast
+                    if (!requestUrl?.includes("/users/register")) {
+                        for (const msg of flattened) {
+                            toast.error(msg);
+                        }
                     }
+
                     throw flattened;
                 } else {
                     toast.error(data || "Bad Request");

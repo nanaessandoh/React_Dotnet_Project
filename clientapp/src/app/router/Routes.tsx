@@ -10,6 +10,8 @@ import NotFound from "../../features/errors/NotFound";
 import ServerError from "../../features/errors/ServerError";
 import RouteError from "../../features/errors/RouteError";
 import LoginForm from "../../features/user/LoginForm";
+import RequireAuth from "./RequireAuth";
+import RegisterForm from "../../features/user/RegisterForm";
 
 export const router = createBrowserRouter([
     {
@@ -18,24 +20,30 @@ export const router = createBrowserRouter([
         errorElement: <RouteError />,
         children: [
             {
+                element: <RequireAuth />,
+                children: [
+                    {
+                        path: "activities",
+                        element: <ActivityDashBoard />
+                    },
+                    {
+                        path: "createActivity",
+                        element: <ActivityForm key='create' /> // Adding key to force remounting
+                    },
+                    {
+                        path: "activities/:activityId",
+                        element: <ActivityDetailsPage />
+                    },
+                    {
+                        path: "manage/:activityId",
+                        element: <ActivityForm key='manage' /> // Adding key to force remounting
+                    },
+
+                ]
+            },
+            {
                 path: "",
                 element: <HomePage />
-            },
-            {
-                path: "activities",
-                element: <ActivityDashBoard />
-            },
-            {
-                path: "createActivity",
-                element: <ActivityForm key='create' /> // Adding key to force remounting
-            },
-            {
-                path: "activities/:activityId",
-                element: <ActivityDetailsPage />
-            },
-            {
-                path: "manage/:activityId",
-                element: <ActivityForm key='manage' /> // Adding key to force remounting
             },
             {
                 path: "counter",
@@ -56,6 +64,10 @@ export const router = createBrowserRouter([
             {
                 path: "login",
                 element: <LoginForm />
+            },
+            {
+                path: "register",
+                element: <RegisterForm />
             },
             {
                 path: "*",
