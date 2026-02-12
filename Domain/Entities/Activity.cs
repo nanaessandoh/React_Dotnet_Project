@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Domain.Entities
@@ -17,5 +19,8 @@ namespace Domain.Entities
         public required string Venue { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+
+        // Navigation properties
+        public ICollection<ActivityAttendee> Attendees { get; set; } = [];
     }
 }

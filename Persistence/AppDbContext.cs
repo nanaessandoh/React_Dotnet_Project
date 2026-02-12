@@ -1,4 +1,3 @@
-using Entities = Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
@@ -13,7 +12,8 @@ namespace Persistence
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Activity> Activities { get; set; }
+        public required DbSet<Activity> Activities { get; set; }
+        public required DbSet<ActivityAttendee> ActivityAttendees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,19 @@ namespace Persistence
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<ActivityAttendee>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.ActivityId });
+
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.Activities)
+                    .HasForeignKey(e => e.UserId);
+
+                entity.HasOne(e => e.Activity)
+                    .WithMany(a => a.Attendees)
+                    .HasForeignKey(e => e.ActivityId);
             });
         }
 
