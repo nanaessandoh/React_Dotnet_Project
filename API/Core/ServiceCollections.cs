@@ -1,8 +1,8 @@
 using System;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
+using Domain.Entities;
 using FluentValidation;
-using Identity.Models;
 using MapsterMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

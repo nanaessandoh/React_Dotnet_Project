@@ -1,6 +1,5 @@
-using System.Net;
 using API.Core;
-using Identity.Models;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

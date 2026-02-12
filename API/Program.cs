@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Identity.Models;
+using Domain.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

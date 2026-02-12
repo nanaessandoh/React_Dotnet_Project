@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Identity.Models;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Entities = Domain.Entities;
 

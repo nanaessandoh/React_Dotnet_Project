@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
+using Domain.Entities;
 
 namespace Persistence
 {
@@ -13,13 +13,13 @@ namespace Persistence
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Entities.Activity> Activities { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Entities.Activity>(entity =>
+            modelBuilder.Entity<Activity>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();

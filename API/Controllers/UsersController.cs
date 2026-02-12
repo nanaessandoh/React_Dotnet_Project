@@ -10,10 +10,10 @@ namespace API.Controllers
     [AllowAnonymous]
     public class UsersController : BaseApiController<UsersController>
     {
-        private readonly SignInManager<Identity.Models.User> _signInManager;
+        private readonly SignInManager<Domain.Entities.User> _signInManager;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(ILogger<UsersController> logger, IMediator mediator, SignInManager<Identity.Models.User> signInManager)
+        public UsersController(ILogger<UsersController> logger, IMediator mediator, SignInManager<Domain.Entities.User> signInManager)
         : base(logger, mediator)
         {
             _signInManager = signInManager;
@@ -21,11 +21,11 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] Identity.Write.User user)
+        public async Task<IActionResult> RegisterUser([FromBody] Domain.Write.User user)
         {
             return await TryAsync(async () =>
             {
-                var newUser = new Identity.Models.User
+                var newUser = new Domain.Entities.User
                 {
                     DisplayName = user.DisplayName,
                     Email = user.Email,
