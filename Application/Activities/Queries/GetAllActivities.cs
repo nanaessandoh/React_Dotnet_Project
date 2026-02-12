@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain.Read;
+using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Persistence;
 using Read = Domain.Read;
 
@@ -27,8 +29,10 @@ namespace Application.Activities.Queries
 
             public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var activities = await _context.Activities.AsNoTracking().ToListAsync(cancellationToken);
-                return _mapper.Map<List<Read.Activity>>(activities);
+                return await _context.Activities
+                    .ProjectToType<Read.Activity>(_mapper.Config)
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken);
             }
         }
     }

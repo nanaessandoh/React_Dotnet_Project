@@ -1,5 +1,7 @@
 using API.Core;
+using Application.Interfaces;
 using Domain.Entities;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +39,7 @@ namespace API
             services.AddMappingProfiles();
             services.AddValidators();
             services.AddIdentityServices();
+            services.AddScoped<IUserAccessor, UserAccessor>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

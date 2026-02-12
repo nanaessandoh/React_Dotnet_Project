@@ -6,6 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Persistence;
 using Application.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Mapster;
 
 namespace Application.Activities.Queries
 {
@@ -29,14 +32,16 @@ namespace Application.Activities.Queries
 
             public async Task<Read.Activity> Handle(Query request, CancellationToken cancellationToken)
             {
-                var activity = await _context.Activities.FindAsync(request.Id, cancellationToken);
+                var activity = await _context.Activities
+                    .ProjectToType<Read.Activity>(_mapper.Config)
+                    .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
                 if (activity == null)
                 {
                     throw new NotFoundException("Activity not found");
                 }
 
-                return _mapper.Map<Read.Activity>(activity);
+                return activity;
             }
         }
     }
