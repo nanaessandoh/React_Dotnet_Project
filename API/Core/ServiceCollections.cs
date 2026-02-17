@@ -3,7 +3,9 @@ using Application.Activities.Queries;
 using Application.Activities.Validators;
 using Domain.Entities;
 using FluentValidation;
+using Infrastructure.Security;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -83,6 +85,16 @@ namespace API.Core
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyConstants.IsActivityHost, policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             return services;
         }

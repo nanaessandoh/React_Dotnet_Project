@@ -13,7 +13,7 @@ namespace Application.Activities.Commands
     {
         public class Command : IRequest
         {
-            public Guid Id { get; set; }
+            public required Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -42,6 +42,5 @@ namespace Application.Activities.Commands
                 }
             }
         }
-
     }
 }

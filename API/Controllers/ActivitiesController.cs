@@ -8,6 +8,7 @@ using Application.Activities.Queries;
 using Application.Activities.Commands;
 using System.Threading;
 using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Security;
 
 namespace API.Controllers
 {
@@ -46,17 +47,30 @@ namespace API.Controllers
             });
         }
 
-        [HttpPatch]
+        [HttpPatch("{id}")]
+        [Authorize(Policy = PolicyConstants.IsActivityHost)]
         public async Task<IActionResult> Edit(Guid id, [FromBody] Write.Activity activity, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
             {
+                activity.Id = id;
                 await mediator.Send(new EditActivity.Command { Activity = activity }, cancellationToken);
                 return NoContent();
             });
         }
 
+        [HttpPost("{id}/attend")]
+        public async Task<IActionResult> UpdateAttendance(Guid id, CancellationToken cancellationToken)
+        {
+            return await TryAsync(async () =>
+            {
+                await mediator.Send(new UpdateAttendance.Command { Id = id }, cancellationToken);
+                return NoContent();
+            });
+        }
+
         [HttpDelete("{id}")]
+        [Authorize(Policy = PolicyConstants.IsActivityHost)]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>
