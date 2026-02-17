@@ -37,12 +37,12 @@ const ActivityDetailsInfo = ({ activity }: Props) => {
                 <Grid2 size={1}>
                     <Place color="info" fontSize="large" />
                 </Grid2>
-                <Grid2 size={11} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                <Grid2 size={11} display={"flex"} alignItems={"center"} justifyContent={"space-between"}>
                     <Typography>
                         {activity.venue}, {activity.city}
                     </Typography>
-                    <Button onClick={() => setMapOpen(!mapOpen)}>
-                        {mapOpen ? 'Hide Map' : 'Show Map'}
+                    <Button sx={{ whiteSpace: "nowrap", mx: 2 }} onClick={() => setMapOpen(!mapOpen)}>
+                        {mapOpen ? "Hide Map" : "Show Map"}
                     </Button>
                 </Grid2>
             </Grid2>

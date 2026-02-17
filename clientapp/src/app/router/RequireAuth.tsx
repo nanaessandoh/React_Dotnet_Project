@@ -6,11 +6,14 @@ const RequireAuth = () => {
     const { currentUser, loadingUserInfo } = useUser();
     const location = useLocation();
 
-    if (loadingUserInfo) (<Typography>Loading...</Typography>)
+    if (loadingUserInfo) {
+        return <Typography>Loading...</Typography>
+    }
 
     if (!currentUser) {
         return <Navigate to='/login' state={{ from: location }} />
     }
+
     return (<Outlet />)
 }
 
