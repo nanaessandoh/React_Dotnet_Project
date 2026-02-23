@@ -8,5 +8,6 @@ namespace Application.Interfaces
     {
         Guid GetUserId();
         Task<User> GetUserAsync();
+        Task<User> GetUserWithPhotosAsync();
     }
 }

@@ -24,6 +24,7 @@ namespace Application.Activities.Commands
             {
                 _context = context;
             }
+
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities.FindAsync(request.Id, cancellationToken);

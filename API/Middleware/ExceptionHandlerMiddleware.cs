@@ -121,12 +121,12 @@ namespace API.Middleware
             {
                 _logger.LogError(puex, "Photo upload exception caught by middleware");
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                 var result = JsonSerializer.Serialize(new
                 {
                     title = "Photo Upload Error",
-                    status = (int)HttpStatusCode.InternalServerError,
+                    status = (int)HttpStatusCode.BadRequest,
                     type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
                     error = "An error occurred while uploading the photo.",
                     detail = puex.Message
@@ -138,12 +138,12 @@ namespace API.Middleware
             {
                 _logger.LogError(pdex, "Photo delete exception caught by middleware");
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                 var result = JsonSerializer.Serialize(new
                 {
                     title = "Photo Delete Error",
-                    status = (int)HttpStatusCode.InternalServerError,
+                    status = (int)HttpStatusCode.BadRequest,
                     type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
                     error = "An error occurred while deleting the photo.",
                     detail = pdex.Message
@@ -185,7 +185,7 @@ namespace API.Middleware
                     status = (int)HttpStatusCode.InternalServerError,
                     error = "An unexpected error occurred.",
                     type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
-                    detail = "Contact support if this persists."
+                    detail = "Please contact support if this persist."
                 };
             }
 

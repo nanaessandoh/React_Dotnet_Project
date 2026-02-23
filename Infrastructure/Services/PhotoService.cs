@@ -1,6 +1,6 @@
 using Application.Exceptions;
 using Application.Interfaces;
-using Application.Photos;
+using Application.UserPhotos;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Infrastructure.Photos;

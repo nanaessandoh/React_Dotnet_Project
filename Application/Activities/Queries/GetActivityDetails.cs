@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Persistence;
 using Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using Mapster;
 
 namespace Application.Activities.Queries

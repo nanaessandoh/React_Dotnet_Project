@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Application.Photos;
+using Application.UserPhotos;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Interfaces

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Infrastructure.Services
@@ -37,6 +38,14 @@ namespace Infrastructure.Services
             }
 
             return Guid.Parse(userId);
+        }
+
+        public async Task<User> GetUserWithPhotosAsync()
+        {
+            return await _context.Users
+                .Include(u => u.Photos)
+                .FirstOrDefaultAsync(u => u.Id == GetUserId())
+                ?? throw new UnauthorizedAccessException("User not logged in");
         }
     }
 }

@@ -34,6 +34,12 @@ namespace API.Core
                 .Map(dest => dest.Bio, src => src.User!.Bio)
                 .Map(dest => dest.ImageUrl, src => src.User!.ImageUrl);
 
+            config.NewConfig<Entities.User, Read.UserProfile>()
+                .Map(dest => dest.UserId, src => src.Id)
+                .Map(dest => dest.DisplayName, src => src.DisplayName)
+                .Map(dest => dest.Bio, src => src.Bio)
+                .Map(dest => dest.ImageUrl, src => src.ImageUrl);
+
             return config;
         }
     }

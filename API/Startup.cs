@@ -40,6 +40,7 @@ namespace API
             services.AddValidators();
             services.AddIdentityServices();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddPhotoSettings(_config);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,6 +1,6 @@
 using System;
 
-namespace Application.Photos
+namespace Application.UserPhotos
 {
     public class PhotoUploadResult
     {
