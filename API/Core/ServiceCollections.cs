@@ -1,9 +1,12 @@
 using System;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
+using Application.Interfaces;
 using Domain.Entities;
 using FluentValidation;
+using Infrastructure.Photos;
 using Infrastructure.Security;
+using Infrastructure.Services;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -95,6 +98,17 @@ namespace API.Core
             });
 
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddPhotoSettings(this IServiceCollection services, IConfiguration config)
+        {
+
+            var cloudinarySettings = new CloudinarySettings();
+            config.Bind("CloudinarySettings", cloudinarySettings);
+            services.AddSingleton(cloudinarySettings);
+            services.AddScoped<IPhotoService, PhotoService>();
 
             return services;
         }

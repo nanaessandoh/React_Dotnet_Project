@@ -100,6 +100,57 @@ namespace API.Middleware
 
                 await context.Response.WriteAsync(result);
             }
+            catch (InvalidFileException ifex)
+            {
+                _logger.LogWarning(ifex, "Invalid file exception caught by middleware");
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                var result = JsonSerializer.Serialize(new
+                {
+                    title = "Invalid File",
+                    status = (int)HttpStatusCode.BadRequest,
+                    type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    error = "The uploaded file is invalid.",
+                    detail = ifex.Message
+                }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (PhotoUploadException puex)
+            {
+                _logger.LogError(puex, "Photo upload exception caught by middleware");
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                var result = JsonSerializer.Serialize(new
+                {
+                    title = "Photo Upload Error",
+                    status = (int)HttpStatusCode.InternalServerError,
+                    type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                    error = "An error occurred while uploading the photo.",
+                    detail = puex.Message
+                }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (PhotoDeleteException pdex)
+            {
+                _logger.LogError(pdex, "Photo delete exception caught by middleware");
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                var result = JsonSerializer.Serialize(new
+                {
+                    title = "Photo Delete Error",
+                    status = (int)HttpStatusCode.InternalServerError,
+                    type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                    error = "An error occurred while deleting the photo.",
+                    detail = pdex.Message
+                }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+                await context.Response.WriteAsync(result);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled exception caught by middleware");

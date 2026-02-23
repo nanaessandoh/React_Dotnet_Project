@@ -12,5 +12,6 @@ namespace Domain.Entities
 
         // Navigation properties
         public ICollection<ActivityAttendee> Activities { get; set; } = [];
+        public ICollection<UserPhoto> Photos { get; set; } = [];
     }
 }
