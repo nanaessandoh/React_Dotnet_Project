@@ -19,6 +19,7 @@ const HomePage = () => {
         display: 'flex',
         alignItems: 'center',
         alignContent: 'center',
+        textAlign: "center",
         color: 'white',
         gap: 3
       }}>
