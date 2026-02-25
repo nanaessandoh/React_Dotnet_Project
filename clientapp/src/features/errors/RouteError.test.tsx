@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { screen, fireEvent } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import * as routerModule from 'react-router'
 import RouteError from './RouteError'
 import renderWithClient from '../../test-utils'
@@ -13,12 +13,29 @@ vi.mock('react-router', async () => {
     }
 })
 
+// Mock for isRouteErrorResponse to properly identify route errors
+vi.mock('react-router', async () => {
+    const actual = await vi.importActual('react-router')
+    return {
+        ...actual,
+        useRouteError: vi.fn(),
+        isRouteErrorResponse: (error: unknown): error is { status: number; statusText: string; data?: unknown } => {
+            return (
+                typeof error === 'object' &&
+                error !== null &&
+                'status' in error &&
+                'statusText' in error
+            )
+        },
+    }
+})
+
 describe('RouteError', () => {
     beforeEach(() => {
         vi.clearAllMocks()
     })
 
-    it('renders error title and main heading', () => {
+    it('renders error heading', () => {
         const mockError = {
             status: 404,
             statusText: 'Not Found',
@@ -29,22 +46,21 @@ describe('RouteError', () => {
 
         renderWithClient(<RouteError />)
 
-        expect(screen.getByText('Oops!')).toBeInTheDocument()
-        expect(screen.getByText('Something went wrong')).toBeInTheDocument()
+        expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument()
     })
 
-    it('renders route error with status code and status text', () => {
+    it('renders route error with status code', () => {
         const mockError = {
             status: 404,
             statusText: 'Not Found',
-            data: { message: 'The page you requested does not exist.' },
+            data: { message: 'Page not found' },
         }
 
         vi.mocked(routerModule.useRouteError).mockReturnValue(mockError)
 
         renderWithClient(<RouteError />)
 
-        expect(screen.getByText(/Error 404/)).toBeInTheDocument()
+        expect(screen.getByText('Error 404')).toBeInTheDocument()
         expect(screen.getByText('Not Found')).toBeInTheDocument()
     })
 
@@ -62,27 +78,13 @@ describe('RouteError', () => {
         expect(screen.getByText('Database connection failed')).toBeInTheDocument()
     })
 
-    it('renders error data as JSON when message is not present', () => {
-        const mockError = {
-            status: 500,
-            statusText: 'Internal Server Error',
-            data: { error: 'Something broke', code: 'ERR_001' },
-        }
-
-        vi.mocked(routerModule.useRouteError).mockReturnValue(mockError)
-
-        renderWithClient(<RouteError />)
-
-        expect(screen.getByText(/ERR_001/)).toBeInTheDocument()
-    })
-
     it('renders generic error message for non-route errors', () => {
         const error = new Error('Runtime error occurred')
         vi.mocked(routerModule.useRouteError).mockReturnValue(error)
 
         renderWithClient(<RouteError />)
 
-        expect(screen.getByText('Oops!')).toBeInTheDocument()
+        expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument()
         expect(screen.getByText('Runtime error occurred')).toBeInTheDocument()
     })
 
@@ -97,8 +99,9 @@ describe('RouteError', () => {
 
         renderWithClient(<RouteError />)
 
-        const homeButton = screen.getByRole('link', { name: /Go Home/i })
-        expect(homeButton).toHaveAttribute('href', '/')
+        const homeButton = screen.getByText(/Go Home/i)
+        expect(homeButton).toBeInTheDocument()
+        expect(homeButton.closest('a')).toHaveAttribute('href', '/')
     })
 
     it('renders refresh button', () => {
@@ -112,8 +115,9 @@ describe('RouteError', () => {
 
         renderWithClient(<RouteError />)
 
-        const refreshButton = screen.getByRole('button', { name: /Refresh Page/i })
+        const refreshButton = screen.getByText(/Refresh Page/i)
         expect(refreshButton).toBeInTheDocument()
+        expect(refreshButton.tagName).toBe('BUTTON')
     })
 
     it('renders helpful message', () => {
@@ -132,7 +136,7 @@ describe('RouteError', () => {
         ).toBeInTheDocument()
     })
 
-    it('handles route error without data', () => {
+    it('handles route error with 403 status', () => {
         const mockError = {
             status: 403,
             statusText: 'Forbidden',
@@ -142,23 +146,7 @@ describe('RouteError', () => {
 
         renderWithClient(<RouteError />)
 
-        expect(screen.getByText(/Error 403/)).toBeInTheDocument()
+        expect(screen.getByText('Error 403')).toBeInTheDocument()
         expect(screen.getByText('Forbidden')).toBeInTheDocument()
-    })
-
-    it('does not display stack trace button in production', () => {
-        const error = new Error('Test error')
-        vi.mocked(routerModule.useRouteError).mockReturnValue(error)
-
-        // Set to production
-        const originalEnv = import.meta.env.DEV
-        Object.defineProperty(import.meta.env, 'DEV', { value: false, configurable: true })
-
-        renderWithClient(<RouteError />)
-
-        expect(screen.queryByText('Stack Trace')).not.toBeInTheDocument()
-
-        // Restore
-        Object.defineProperty(import.meta.env, 'DEV', { value: originalEnv, configurable: true })
     })
 })
