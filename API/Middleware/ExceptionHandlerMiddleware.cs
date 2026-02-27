@@ -32,6 +32,24 @@ namespace API.Middleware
             try
             {
                 await _next(context);
+
+                // Handle 404 responses
+                if (context.Response.StatusCode == (int)HttpStatusCode.NotFound)
+                {
+                    _logger.LogWarning($"Route not found: {context.Request.Method} {context.Request.Path}");
+                    context.Response.ContentType = "application/json";
+
+                    var result = JsonSerializer.Serialize(new
+                    {
+                        title = "Not Found",
+                        status = (int)HttpStatusCode.NotFound,
+                        type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+                        error = "The requested endpoint does not exist.",
+                        detail = $"{context.Request.Method} {context.Request.Path} was not found."
+                    }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+                    await context.Response.WriteAsync(result);
+                }
             }
             catch (ValidationException vex)
             {

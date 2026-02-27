@@ -47,14 +47,15 @@ agent.interceptors.response.use(
                     toast.error(data.detail || data.error || data.title || "Bad Request");
                     throw data;
                 }
-
-                toast.error(data || "Bad Request");
                 break;
             case 401:
                 toast.error("Unauthorized");
                 break;
             case 404:
-                router.navigate("/not-found");
+                if (data?.error || data?.detail || data?.title) {
+                    toast.error(data.error || data.detail || data.title || "The requested resource was not found");
+                    throw data;
+                }
                 break;
             case 500:
                 router.navigate("/server-error", { state: { error: data } });

@@ -61,7 +61,7 @@ namespace API.Controllers
             });
         }
 
-        [HttpPatch("{photoId}/setmain")]
+        [HttpPatch("photos/{photoId}/set-main")]
         public async Task<IActionResult> SetMainPhoto(Guid photoId, CancellationToken cancellationToken)
         {
             return await TryAsync(async () =>

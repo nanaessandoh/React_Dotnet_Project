@@ -1,12 +1,14 @@
 import { useParams } from 'react-router';
 import { useProfile } from '../../lib/hooks/useProfile';
-import { Box, Button, ImageList, ImageListItem, Typography } from '@mui/material';
+import { Box, Button, Divider, ImageList, ImageListItem, Typography } from '@mui/material';
 import { useState } from 'react';
 import PhotoUploadWidget from '../../app/shared/components/PhotoUploadWidget';
+import StarButton from '../../app/shared/components/StarButton';
+import DeleteButton from '../../app/shared/components/DeleteButton';
 
 const ProfilePhotos = () => {
     const { userId } = useParams();
-    const { photos, loadingPhotos, isCurrentUser, uploadPhoto } = useProfile(userId);
+    const { photos, loadingPhotos, isCurrentUser, uploadPhoto, profile, setMainPhoto, deletePhoto } = useProfile(userId);
     const [editMode, setEditMode] = useState(false);
 
     const handlePhotoUpload = (file: Blob) => {
@@ -21,19 +23,24 @@ const ProfilePhotos = () => {
 
     return (
         <Box>
-            {isCurrentUser && (
-                <Box>
+            <Box display={"flex"} justifyContent={"space-between"}>
+                <Typography variant="h5" gutterBottom>
+                    Photos
+                </Typography>
+                {isCurrentUser && (
                     <Button onClick={() => setEditMode(!editMode)} sx={{ mb: 2 }}>
                         {editMode ? 'Cancel' : 'Manage Photos'}
                     </Button>
-                </Box>)}
+                )}
+            </Box>
+            <Divider />
             {editMode ? (
                 <PhotoUploadWidget
                     onPhotoUpload={handlePhotoUpload}
                     loading={uploadPhoto.isPending}
                 />
             ) : !photos || photos.length === 0 ? (
-                <Typography>No photos available.</Typography>
+                <Typography>No photos added yet.</Typography>
             ) : (
                 <ImageList sx={{ height: 450 }} cols={6} rowHeight={164}>
                     {photos?.map((item, index) => (
@@ -50,6 +57,34 @@ const ProfilePhotos = () => {
                                 alt={`Photo ${index + 1} of user profile`}
                                 loading="lazy"
                             />
+                            {isCurrentUser && (
+                                <div>
+                                    <Box
+                                        sx={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            mt: "5px"
+                                        }}
+                                        onClick={() => setMainPhoto.mutate(item)}
+                                    >
+                                        <StarButton selected={item.url == profile?.imageUrl} />
+                                    </Box>
+                                    {item.url !== profile?.imageUrl && (
+                                        <Box
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 0,
+                                                mt: "5px",
+                                            }}
+                                            onClick={() => deletePhoto.mutate(item.id)}
+                                        >
+                                            <DeleteButton />
+                                        </Box>
+                                    )}
+                                </div>
+                            )}
                         </ImageListItem>
                     ))}
                 </ImageList>

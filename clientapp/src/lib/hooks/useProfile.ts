@@ -53,7 +53,7 @@ export const useProfile = (userId?: string) => {
 
     const setMainPhoto = useMutation({
         mutationFn: async (photo: Photo) => {
-            await agent.patch(`/userprofiles/photos/${photo.id}/setmain`);
+            await agent.patch(`/userprofiles/photos/${photo.id}/set-main`);
         },
         onSuccess: (_, photo: Photo) => {
             queryClient.setQueryData<User>(['user'], (old: User | undefined) => {
@@ -73,6 +73,21 @@ export const useProfile = (userId?: string) => {
         }
     })
 
+    const deletePhoto = useMutation({
+        mutationFn: async (photoId: string) => {
+            await agent.delete(`/userprofiles/${photoId}/photos`);
+        },
+        onSuccess: (_, photoId: string) => {
+            queryClient.setQueryData<Photo[]>(['photos', userId], (old: Photo[] | undefined) => {
+                if (old) {
+                    // Remove the deleted photo from the photos list
+                    return old.filter(photo => photo.id !== photoId);
+                }
+                return old;
+            });
+        }
+    })
+
     const isCurrentUser = useMemo(() => userId === queryClient.getQueryData<User>(['user'])?.id, [userId, queryClient]);
 
     return {
@@ -80,8 +95,9 @@ export const useProfile = (userId?: string) => {
         loadingProfile,
         photos,
         loadingPhotos,
-        isCurrentUser,
         uploadPhoto,
-        setMainPhoto
+        setMainPhoto,
+        deletePhoto,
+        isCurrentUser
     }
 };

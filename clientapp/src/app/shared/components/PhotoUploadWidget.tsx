@@ -1,6 +1,6 @@
-import { Cloud } from '@mui/icons-material'
+import { CloudUpload } from '@mui/icons-material'
 import { Box, Button, Grid2, Typography } from '@mui/material'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
@@ -13,11 +13,13 @@ type Props = {
 const PhotoUploadWidget = ({ onPhotoUpload, loading }: Props) => {
     const [files, setFiles] = useState<object & { preview: string }[]>([])
     const cropperRef = useRef<ReactCropperElement>(null)
+
     const onDrop = useCallback((acceptedFiles: File[]) => {
         setFiles(acceptedFiles.map(file => Object.assign(file, {
             preview: URL.createObjectURL(file as Blob)
         })))
     }, [])
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
     const oncrop = useCallback(() => {
@@ -30,6 +32,13 @@ const PhotoUploadWidget = ({ onPhotoUpload, loading }: Props) => {
             });
         }
     }, [onPhotoUpload, cropperRef])
+
+    useEffect(() => {
+        // Revoke the data uris to avoid memory leaks
+        return () => {
+            files.forEach(file => URL.revokeObjectURL(file.preview));
+        }
+    }, [files])
 
     return (
         <Grid2 container spacing={3}>
@@ -47,7 +56,7 @@ const PhotoUploadWidget = ({ onPhotoUpload, loading }: Props) => {
                     {...getRootProps()}
                 >
                     <input {...getInputProps()} />
-                    <Cloud sx={{ fontSize: 80 }} />
+                    <CloudUpload sx={{ fontSize: 80 }} />
                     <Typography variant="h5">Drag and drop a photo here, or click to select one</Typography>
                 </Box>
             </Grid2>
@@ -80,9 +89,8 @@ const PhotoUploadWidget = ({ onPhotoUpload, loading }: Props) => {
                             style={{ width: 300, height: 300, overflow: "hidden", borderRadius: "5px" }}
                         />
                         <Button
-                            fullWidth
                             variant="contained"
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 1, width: 300 }}
                             color="secondary"
                             onClick={oncrop}
                             disabled={loading}
