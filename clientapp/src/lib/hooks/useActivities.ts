@@ -21,7 +21,8 @@ export const useActivities = (activityId?: string) => {
                 return {
                     ...activity,
                     isGoing: activity.attendees.some(a => a.userId === currentUser?.id),
-                    isHost: activity.hostUserId === currentUser?.id
+                    isHost: activity.hostUserId === currentUser?.id,
+                    hostImageUrl: activity.attendees.find(a => a.userId === activity.hostUserId)?.imageUrl
                 };
             });
         }
@@ -39,7 +40,8 @@ export const useActivities = (activityId?: string) => {
             return {
                 ...data,
                 isGoing: data.attendees.some(a => a.userId === currentUser?.id),
-                isHost: data.hostUserId === currentUser?.id
+                isHost: data.hostUserId === currentUser?.id,
+                hostImageUrl: data.attendees.find(a => a.userId === data.hostUserId)?.imageUrl
             };
         }
     });
