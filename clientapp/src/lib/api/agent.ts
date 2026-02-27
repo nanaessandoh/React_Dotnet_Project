@@ -27,8 +27,6 @@ agent.interceptors.response.use(
         switch (status) {
             case 400:
                 if (data?.errors) {
-
-
                     const modalStateErrors = [];
                     for (const key in data.errors) {
                         if (data.errors[key]) {
@@ -36,18 +34,21 @@ agent.interceptors.response.use(
                         }
                     }
                     const flattened = modalStateErrors.flat();
-
                     // Allow registration errors to be handled in the form instead of showing a toast
                     if (!requestUrl?.includes("/users/register")) {
                         for (const msg of flattened) {
                             toast.error(msg);
                         }
                     }
-
                     throw flattened;
-                } else {
-                    toast.error(data || "Bad Request");
                 }
+
+                if (data?.detail || data?.error || data?.title) {
+                    toast.error(data.detail || data.error || data.title || "Bad Request");
+                    throw data;
+                }
+
+                toast.error(data || "Bad Request");
                 break;
             case 401:
                 toast.error("Unauthorized");
@@ -62,6 +63,7 @@ agent.interceptors.response.use(
                 toast.error("Unknown Error");
                 break;
         }
+
         return Promise.reject(error.response?.data);
     }
 );
