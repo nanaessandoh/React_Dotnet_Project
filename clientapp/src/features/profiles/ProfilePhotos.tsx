@@ -6,11 +6,18 @@ import PhotoUploadWidget from '../../app/shared/components/PhotoUploadWidget';
 
 const ProfilePhotos = () => {
     const { userId } = useParams();
-    const { photos, loadingPhotos, isCurrentUser } = useProfile(userId);
+    const { photos, loadingPhotos, isCurrentUser, uploadPhoto } = useProfile(userId);
     const [editMode, setEditMode] = useState(false);
 
+    const handlePhotoUpload = (file: Blob) => {
+        uploadPhoto.mutate(file, {
+            onSuccess: () => {
+                setEditMode(false);
+            }
+        });
+    };
+
     if (loadingPhotos) return <Typography>Loading photos...</Typography>;
-    if (!photos || photos.length === 0) return <Typography>No photos found.</Typography>;
 
     return (
         <Box>
@@ -21,7 +28,12 @@ const ProfilePhotos = () => {
                     </Button>
                 </Box>)}
             {editMode ? (
-                <PhotoUploadWidget />
+                <PhotoUploadWidget
+                    onPhotoUpload={handlePhotoUpload}
+                    loading={uploadPhoto.isPending}
+                />
+            ) : !photos || photos.length === 0 ? (
+                <Typography>No photos available.</Typography>
             ) : (
                 <ImageList sx={{ height: 450 }} cols={6} rowHeight={164}>
                     {photos?.map((item, index) => (
@@ -41,7 +53,6 @@ const ProfilePhotos = () => {
                         </ImageListItem>
                     ))}
                 </ImageList>
-
             )}
         </Box>
     )

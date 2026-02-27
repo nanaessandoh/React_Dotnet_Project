@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useMemo } from "react";
 
@@ -22,6 +22,57 @@ export const useProfile = (userId?: string) => {
         enabled: !!userId
     })
 
+    const uploadPhoto = useMutation({
+        mutationFn: async (file: Blob) => {
+            const formData = new FormData();
+            formData.append('File', file);
+            const response = await agent.post<Photo>(`/userprofiles/add-photo`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return response.data;
+        },
+        onSuccess: async (newPhoto) => {
+            // Invalidate the photos query to refetch the updated list of photos
+            await queryClient.invalidateQueries({ queryKey: ['photos', userId] });
+            queryClient.setQueryData<User>(['user'], (old: User | undefined) => {
+                if (old) {
+                    // If the user doesn't have an image, set it to the new photo's URL
+                    return { ...old, imageUrl: old.imageUrl || newPhoto.url };
+                }
+                return old;
+            });
+            queryClient.setQueryData<Profile>(['profile', userId], (old: Profile | undefined) => {
+                if (old) {
+                    // If the profile doesn't have an image, set it to the new photo's URL
+                    return { ...old, imageUrl: old.imageUrl || newPhoto.url };
+                }
+                return old;
+            });
+        }
+    })
+
+    const setMainPhoto = useMutation({
+        mutationFn: async (photo: Photo) => {
+            await agent.patch(`/userprofiles/photos/${photo.id}/setmain`);
+        },
+        onSuccess: (_, photo: Photo) => {
+            queryClient.setQueryData<User>(['user'], (old: User | undefined) => {
+                if (old) {
+                    // Update user image to the new main photo URL
+                    return { ...old, imageUrl: photo.url };
+                }
+                return old;
+            });
+            queryClient.setQueryData<Profile>(['profile', userId], (old: Profile | undefined) => {
+                if (old) {
+                    // Update profile photo to the new main photo URL
+                    return { ...old, imageUrl: photo.url };
+                }
+                return old;
+            });
+        }
+    })
+
     const isCurrentUser = useMemo(() => userId === queryClient.getQueryData<User>(['user'])?.id, [userId, queryClient]);
 
     return {
@@ -29,6 +80,8 @@ export const useProfile = (userId?: string) => {
         loadingProfile,
         photos,
         loadingPhotos,
-        isCurrentUser
+        isCurrentUser,
+        uploadPhoto,
+        setMainPhoto
     }
 };
