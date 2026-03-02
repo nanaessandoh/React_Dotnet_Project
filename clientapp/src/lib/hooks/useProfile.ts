@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 export const useProfile = (userId?: string) => {
     const queryClient = useQueryClient();
+
     const { data: profile, isLoading: loadingProfile } = useQuery<Profile>({
         queryKey: ['profile', userId],
         queryFn: async () => {
@@ -11,7 +12,7 @@ export const useProfile = (userId?: string) => {
             return response.data;
         },
         enabled: !!userId
-    })
+    });
 
     const { data: photos, isLoading: loadingPhotos } = useQuery({
         queryKey: ['photos', userId],
@@ -20,7 +21,7 @@ export const useProfile = (userId?: string) => {
             return response.data;
         },
         enabled: !!userId
-    })
+    });
 
     const uploadPhoto = useMutation({
         mutationFn: async (file: Blob) => {
@@ -49,7 +50,7 @@ export const useProfile = (userId?: string) => {
                 return old;
             });
         }
-    })
+    });
 
     const setMainPhoto = useMutation({
         mutationFn: async (photo: Photo) => {
@@ -71,7 +72,29 @@ export const useProfile = (userId?: string) => {
                 return old;
             });
         }
-    })
+    });
+
+    const updateProfile = useMutation({
+        mutationFn: async (profile: Profile) => {
+            await agent.patch(`/userprofiles/update-profile`, profile)
+        },
+        onSuccess: (_, profile: Profile) => {
+            queryClient.setQueryData<User>(['user'], (old: User | undefined) => {
+                if (old) {
+                    // Update user display name
+                    return { ...old, displayName: profile.displayName };
+                }
+                return old;
+            });
+            queryClient.setQueryData<Profile>(['profile', userId], (old: Profile | undefined) => {
+                if (old) {
+                    // Update display name and bio
+                    return { ...old, displayName: profile.displayName, bio: profile.bio };
+                }
+                return old;
+            });
+        }
+    });
 
     const deletePhoto = useMutation({
         mutationFn: async (photoId: string) => {
@@ -86,7 +109,7 @@ export const useProfile = (userId?: string) => {
                 return old;
             });
         }
-    })
+    });
 
     const isCurrentUser = useMemo(() => userId === queryClient.getQueryData<User>(['user'])?.id, [userId, queryClient]);
 
@@ -97,6 +120,7 @@ export const useProfile = (userId?: string) => {
         loadingPhotos,
         uploadPhoto,
         setMainPhoto,
+        updateProfile,
         deletePhoto,
         isCurrentUser
     }

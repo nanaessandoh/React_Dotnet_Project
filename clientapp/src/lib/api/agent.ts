@@ -49,7 +49,12 @@ agent.interceptors.response.use(
                 }
                 break;
             case 401:
-                toast.error("Unauthorized");
+                if (requestUrl?.includes("/login?useCookies=true")) {
+                    toast.error("Invalid Email or Password")
+                }
+                else {
+                    toast.error("User Unauthorized");
+                }
                 break;
             case 404:
                 if (data?.error || data?.detail || data?.title) {
