@@ -70,7 +70,8 @@ namespace API.Controllers
                     user.Email,
                     user.UserName,
                     user.Id,
-                    user.ImageUrl
+                    user.ImageUrl,
+                    user.Bio
                 });
             });
         }

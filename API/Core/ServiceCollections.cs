@@ -73,6 +73,7 @@ namespace API.Core
 
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
+            // Only register one validator
             services.AddValidatorsFromAssemblyContaining<ActivityValidator>();
 
             return services;

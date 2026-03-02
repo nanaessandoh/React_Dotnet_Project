@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Profiles.Command;
 using Application.Profiles.Query;
 using Application.UserPhotos.Commands;
 using Application.UserPhotos.Queries;
@@ -8,6 +9,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Write = Domain.Write;
 
 namespace API.Controllers
 {
@@ -67,6 +69,17 @@ namespace API.Controllers
             return await TryAsync(async () =>
             {
                 var command = new SetMainPhoto.Command { PhotoId = photoId };
+                await mediator.Send(command, cancellationToken);
+                return NoContent();
+            });
+        }
+
+        [HttpPatch("update-profile")]
+        public async Task<IActionResult> UpdateUserProfile([FromBody] Write.UserProfile userProfile, CancellationToken cancellationToken)
+        {
+            return await TryAsync(async () =>
+            {
+                var command = new UpdateProfile.Command { UserProfile = userProfile };
                 await mediator.Send(command, cancellationToken);
                 return NoContent();
             });
