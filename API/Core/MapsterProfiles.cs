@@ -34,6 +34,10 @@ namespace API.Core
                 .Map(dest => dest.Bio, src => src.User!.Bio)
                 .Map(dest => dest.ImageUrl, src => src.User!.ImageUrl);
 
+            config.NewConfig<Entities.Comment, Read.Comment>()
+                .Map(dest => dest.DisplayName, src => src.User.DisplayName)
+                .Map(dest => dest.ImageUrl, src => src.User.ImageUrl);
+
             config.NewConfig<Entities.User, Read.UserProfile>()
                 .Map(dest => dest.UserId, src => src.Id)
                 .Map(dest => dest.DisplayName, src => src.DisplayName)

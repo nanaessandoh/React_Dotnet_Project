@@ -62,6 +62,6 @@ type Profile = {
 }
 
 type Photo = {
-    id: string
+    photoId: string
     url: string
 }

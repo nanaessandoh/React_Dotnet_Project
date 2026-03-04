@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.Read;
 using Mapster;
 using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using Persistence;
 using Read = Domain.Read;
 
@@ -16,7 +14,7 @@ namespace Application.Activities.Queries
     {
         public class Query : IRequest<List<Read.Activity>> { }
 
-        public class Handler : IRequestHandler<Query, List<Activity>>
+        public class Handler : IRequestHandler<Query, List<Read.Activity>>
         {
             private readonly IAppDbContext _context;
             private readonly IMapper _mapper;
@@ -27,7 +25,7 @@ namespace Application.Activities.Queries
                 _mapper = mapper;
             }
 
-            public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<Read.Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.Activities
                     .ProjectToType<Read.Activity>(_mapper.Config)

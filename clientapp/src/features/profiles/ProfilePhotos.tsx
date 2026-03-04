@@ -44,7 +44,7 @@ const ProfilePhotos = () => {
             ) : (
                 <ImageList sx={{ height: 450 }} cols={6} rowHeight={164}>
                     {photos?.map((item, index) => (
-                        <ImageListItem key={item.id}>
+                        <ImageListItem key={item.photoId}>
                             <img
                                 srcSet={`${item.url.replace(
                                     "/upload/",
@@ -78,7 +78,7 @@ const ProfilePhotos = () => {
                                                 right: 0,
                                                 mt: "5px",
                                             }}
-                                            onClick={() => deletePhoto.mutate(item.id)}
+                                            onClick={() => deletePhoto.mutate(item.photoId)}
                                         >
                                             <DeleteButton />
                                         </Box>

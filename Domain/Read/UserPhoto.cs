@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Domain.Read
 {
     public class UserPhoto
     {
+        [JsonPropertyName("photoId")]
         public Guid Id { get; set; }
         public required string Url { get; set; }
         public required string PublicId { get; set; }
