@@ -15,12 +15,12 @@ namespace Application.Comments.Queries
 {
     public class GetComments
     {
-        public class Command : IRequest<List<Read.Comment>>
+        public class Query : IRequest<List<Read.Comment>>
         {
             public required Guid ActivityId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, List<Read.Comment>>
+        public class Handler : IRequestHandler<Query, List<Read.Comment>>
         {
             private readonly IAppDbContext _context;
             private readonly IMapper _mapper;
@@ -31,7 +31,7 @@ namespace Application.Comments.Queries
                 _mapper = mapper;
             }
 
-            public async Task<List<Read.Comment>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<List<Read.Comment>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var comments = await _context.Comments
                     .Where(x => x.ActivityId == request.ActivityId)

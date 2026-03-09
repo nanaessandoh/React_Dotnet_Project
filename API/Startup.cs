@@ -1,4 +1,5 @@
 using API.Core;
+using API.SignalR;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Services;
@@ -25,6 +26,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            services.AddSignalR();
             services.AddControllers(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -68,6 +70,7 @@ namespace API
             {
                 endpoints.MapControllers();
                 endpoints.MapGroup("api").MapIdentityApi<User>();
+                endpoints.MapHub<CommentsHub>("/comments");
             });
         }
     }

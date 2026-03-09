@@ -35,12 +35,11 @@ namespace Application.Comments.Command
 
             public async Task<Read.Comment> Handle(Command request, CancellationToken cancellationToken)
             {
+                // Verify activity exists without loading it fully
+                var activityExists = await _context.Activities
+                    .AnyAsync(x => x.Id == request.Comment.ActivityId, cancellationToken);
 
-                var activity = await _context.Activities
-                    .Include(x => x.Comments)
-                    .FirstOrDefaultAsync(x => x.Id == request.Comment.ActivityId, cancellationToken);
-
-                if (activity is null)
+                if (!activityExists)
                 {
                     throw new NotFoundException("Activity not found");
                 }
@@ -54,9 +53,8 @@ namespace Application.Comments.Command
                     ActivityId = request.Comment.ActivityId,
                     UserId = user.Id
                 };
-                activity.Comments.Add(commentEntity);
 
-                await _context.Activities.AddAsync(activity, cancellationToken);
+                await _context.Comments.AddAsync(commentEntity, cancellationToken);
                 var result = await _context.SaveChangesAsync(cancellationToken);
 
                 if (!result)
