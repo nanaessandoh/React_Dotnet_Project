@@ -14,7 +14,7 @@ type Activity = {
     isHost: boolean
     hostUserId: string
     hostDisplayName: string
-    hostImageUrl: string
+    hostImageUrl: string | undefined
 }
 
 type LocationIQSuggestion = {
@@ -64,4 +64,13 @@ type Profile = {
 type Photo = {
     photoId: string
     url: string
+}
+
+type ChatComment = {
+    commentId: string
+    createdTimestamp: Date
+    userId: string
+    body: string
+    displayName: string
+    imageUrl?: string
 }
