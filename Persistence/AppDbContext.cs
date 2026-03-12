@@ -17,6 +17,8 @@ namespace Persistence
         public required DbSet<ActivityAttendee> ActivityAttendees { get; set; }
         public required DbSet<UserPhoto> UserPhotos { get; set; }
         public required DbSet<Comment> Comments { get; set; }
+        public required DbSet<UserFollowing> UserFollowings { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +41,21 @@ namespace Persistence
                 entity.HasOne(e => e.Activity)
                     .WithMany(a => a.Attendees)
                     .HasForeignKey(e => e.ActivityId);
+            });
+
+            modelBuilder.Entity<UserFollowing>(entity =>
+            {
+                entity.HasKey(e => new { e.FollowerId, e.UserId });
+
+                entity.HasOne(f => f.Follower)
+                    .WithMany(f => f.Followings)
+                    .HasForeignKey(f => f.FollowerId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(u => u.User)
+                    .WithMany(u => u.Followers)
+                    .HasForeignKey(u => u.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             var dateTimeConverter = new ValueConverter<DateTime, DateTime>(

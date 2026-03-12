@@ -13,6 +13,7 @@ namespace Persistence
         DbSet<Entities.ActivityAttendee> ActivityAttendees { get; set; }
         DbSet<Entities.UserPhoto> UserPhotos { get; set; }
         DbSet<Entities.Comment> Comments { get; set; }
+        DbSet<Entities.UserFollowing> UserFollowings { get; set; }
         bool SaveChanges();
         Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
