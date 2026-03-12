@@ -41,6 +41,17 @@ namespace API.Controllers
             });
         }
 
+        [HttpGet("{userId}/follow-list")]
+        public async Task<IActionResult> GetFollowing(Guid userId, FollowingType type, CancellationToken cancellationToken)
+        {
+            return await TryAsync(async () =>
+            {
+                var command = new GetFollowings.Query { UserId = userId, FollowingType = type };
+                await mediator.Send(command, cancellationToken);
+                return NoContent();
+            });
+        }
+
         [HttpPost("add-photo")]
         public async Task<IActionResult> AddPhoto([FromForm] IFormFile file, CancellationToken cancellationToken)
         {
@@ -80,6 +91,17 @@ namespace API.Controllers
             return await TryAsync(async () =>
             {
                 var command = new UpdateProfile.Command { UserProfile = userProfile };
+                await mediator.Send(command, cancellationToken);
+                return NoContent();
+            });
+        }
+
+        [HttpPost("{userId}/follow")]
+        public async Task<IActionResult> FollowToggle(Guid userId, CancellationToken cancellationToken)
+        {
+            return await TryAsync(async () =>
+            {
+                var command = new FollowToggle.Command { UserToFollowId = userId };
                 await mediator.Send(command, cancellationToken);
                 return NoContent();
             });
