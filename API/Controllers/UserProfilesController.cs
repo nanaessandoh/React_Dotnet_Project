@@ -47,8 +47,8 @@ namespace API.Controllers
             return await TryAsync(async () =>
             {
                 var command = new GetFollowings.Query { UserId = userId, FollowingType = type };
-                await mediator.Send(command, cancellationToken);
-                return NoContent();
+                var following = await mediator.Send(command, cancellationToken);
+                return Ok(following);
             });
         }
 

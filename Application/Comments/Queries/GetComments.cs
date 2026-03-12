@@ -3,13 +3,12 @@ using Read = Domain.Read;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using System.Threading;
 using Persistence;
-using MapsterMapper;
 using System.Linq;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace Application.Comments.Queries
 {
@@ -36,7 +35,7 @@ namespace Application.Comments.Queries
                 var comments = await _context.Comments
                     .Where(x => x.ActivityId == request.ActivityId)
                     .OrderByDescending(x => x.CreatedTimestamp)
-                    .ProjectToType<Read.Comment>(_mapper.Config)
+                    .ProjectTo<Read.Comment>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
 
                 return comments;

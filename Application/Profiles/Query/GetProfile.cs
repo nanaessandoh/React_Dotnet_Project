@@ -3,10 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Interfaces;
-using Mapster;
-using MapsterMapper;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Read = Domain.Read;
@@ -24,17 +23,19 @@ namespace Application.Profiles.Query
         {
             private readonly IAppDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(IAppDbContext context, IMapper mapper)
+            public Handler(IAppDbContext context, IMapper mapper, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Read.UserProfile> Handle(Query request, CancellationToken cancellationToken)
             {
                 var profile = await _context.Users
-                    .ProjectToType<Read.UserProfile>(_mapper.Config)
+                    .ProjectTo<Read.UserProfile>(_mapper.ConfigurationProvider, new { currentUserId = _userAccessor.GetUserId() })
                     .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
 
                 if (profile == null)

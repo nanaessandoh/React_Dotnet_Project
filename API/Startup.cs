@@ -38,7 +38,7 @@ namespace API
             services.AddDatabaseContext(_config);
             services.AddCorsForFE();
             services.AddMediatRProfiles();
-            services.AddMappingProfiles();
+            services.AddAutoMapperAndProfiles();
             services.AddValidators();
             services.AddIdentityServices();
             services.AddScoped<IUserAccessor, UserAccessor>();

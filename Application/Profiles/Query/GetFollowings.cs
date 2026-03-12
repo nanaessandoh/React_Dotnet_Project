@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Mapster;
-using MapsterMapper;
+using Application.Interfaces;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -24,11 +25,13 @@ namespace Application.Profiles.Query
         {
             private readonly IAppDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(IAppDbContext context, IMapper mapper)
+            public Handler(IAppDbContext context, IMapper mapper, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
+                _userAccessor = userAccessor;
             }
 
             public async Task<List<Read.UserProfile>> Handle(Query request, CancellationToken cancellationToken)
@@ -39,7 +42,7 @@ namespace Application.Profiles.Query
                     return await _context.UserFollowings
                         .Where(uf => uf.FollowerId == request.UserId)
                         .Select(uf => uf.User)
-                        .ProjectToType<Read.UserProfile>(_mapper.Config)
+                        .ProjectTo<Read.UserProfile>(_mapper.ConfigurationProvider, new { currentUserId = _userAccessor.GetUserId() })
                         .ToListAsync(cancellationToken);
                 }
                 // followers
@@ -48,7 +51,7 @@ namespace Application.Profiles.Query
                     return await _context.UserFollowings
                         .Where(uf => uf.UserId == request.UserId)
                         .Select(uf => uf.Follower)
-                        .ProjectToType<Read.UserProfile>(_mapper.Config)
+                        .ProjectTo<Read.UserProfile>(_mapper.ConfigurationProvider, new { currentUserId = _userAccessor.GetUserId() })
                         .ToListAsync(cancellationToken);
                 }
             }

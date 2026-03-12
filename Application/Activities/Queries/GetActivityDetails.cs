@@ -1,13 +1,14 @@
 using System;
 using Read = Domain.Read;
-using MapsterMapper;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using Persistence;
 using Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Mapster;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Application.Interfaces;
 
 namespace Application.Activities.Queries
 {
@@ -22,17 +23,19 @@ namespace Application.Activities.Queries
         {
             private readonly IAppDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(AppDbContext contex, IMapper mapper)
+            public Handler(AppDbContext contex, IMapper mapper, IUserAccessor userAccessor)
             {
                 _context = contex;
                 _mapper = mapper;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Read.Activity> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activity = await _context.Activities
-                    .ProjectToType<Read.Activity>(_mapper.Config)
+                    .ProjectTo<Read.Activity>(_mapper.ConfigurationProvider, new { currentUserId = _userAccessor.GetUserId() })
                     .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
                 if (activity == null)

@@ -4,12 +4,12 @@ using Write = Domain.Write;
 using Entity = Domain.Entities;
 using Read = Domain.Read;
 using Persistence;
-using MapsterMapper;
 using System.Threading;
 using FluentValidation;
 using Application.Extensions;
 using Application.Exceptions;
 using Application.Interfaces;
+using AutoMapper;
 
 namespace Application.Activities.Commands
 {

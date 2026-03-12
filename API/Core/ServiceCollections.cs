@@ -2,12 +2,12 @@ using System;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using Infrastructure.Services;
-using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -63,10 +63,14 @@ namespace API.Core
             return services;
         }
 
-        public static IServiceCollection AddMappingProfiles(this IServiceCollection services)
+        public static IServiceCollection AddAutoMapperAndProfiles(this IServiceCollection services)
         {
-            services.AddSingleton(MapsterProfiles.GetMapsterConfig());
-            services.AddScoped<IMapper, ServiceMapper>();
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.ShouldMapMethod = m => false;
+                cfg.AddIncludedPropertiesOnlySupport();
+            },
+            typeof(MappingProfiles).Assembly);
 
             return services;
         }

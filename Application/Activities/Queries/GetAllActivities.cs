@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Mapster;
-using MapsterMapper;
+using Application.Interfaces;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -18,17 +19,19 @@ namespace Application.Activities.Queries
         {
             private readonly IAppDbContext _context;
             private readonly IMapper _mapper;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(IAppDbContext context, IMapper mapper)
+            public Handler(IAppDbContext context, IMapper mapper, IUserAccessor userAccessor)
             {
                 _context = context;
                 _mapper = mapper;
+                _userAccessor = userAccessor;
             }
 
             public async Task<List<Read.Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
                 return await _context.Activities
-                    .ProjectToType<Read.Activity>(_mapper.Config)
+                    .ProjectTo<Read.Activity>(_mapper.ConfigurationProvider, new { currentUserId = _userAccessor.GetUserId() })
                     .AsNoTracking()
                     .ToListAsync(cancellationToken);
             }

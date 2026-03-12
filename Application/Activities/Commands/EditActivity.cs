@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using MediatR;
 using Write = Domain.Write;
 using Persistence;
-using MapsterMapper;
 using System.Threading;
 using Application.Exceptions;
 using FluentValidation;
 using Application.Extensions;
+using AutoMapper;
 
 namespace Application.Activities.Commands
 {

@@ -3,13 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Exceptions;
 using Application.Interfaces;
-using MapsterMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Read = Domain.Read;
 using Write = Domain.Write;
 using Entities = Domain.Entities;
+using AutoMapper;
 
 namespace Application.Comments.Command
 {
