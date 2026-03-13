@@ -26,6 +26,10 @@ const AvatarPopover = ({ attendee }: Props) => {
             <Avatar
                 alt={attendee.displayName + " image"}
                 src={attendee.imageUrl}
+                sx={{
+                    border: attendee.following ? 3 : 0,
+                    borderColor: 'secondary.main'
+                }}
                 component={Link}
                 to={`/profiles/${attendee.userId}`}
                 onMouseEnter={handlePopoverOpen}
