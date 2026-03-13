@@ -23,7 +23,10 @@ namespace API.Core
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.User!.DisplayName))
                 .ForMember(dest => dest.Bio, opt => opt.MapFrom(src => src.User!.Bio))
-                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.User!.ImageUrl));
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.User!.ImageUrl))
+                .ForMember(dest => dest.Following, opt => opt.MapFrom(src => src.User!.Followers.Any(f => f.FollowerId == currentUserId)))
+                .ForMember(dest => dest.FollowersCount, opt => opt.MapFrom(src => src.User!.Followers.Count))
+                .ForMember(dest => dest.FollowingCount, opt => opt.MapFrom(src => src.User!.Followings.Count));
 
             CreateMap<Entities.Comment, Read.Comment>()
                 .ForMember(dest => dest.DisplayName, opt => opt.MapFrom(src => src.User.DisplayName))
