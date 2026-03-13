@@ -111,6 +111,25 @@ export const useProfile = (userId?: string) => {
         }
     });
 
+    const updateFollowing = useMutation({
+        mutationFn: async () => {
+            await agent.post(`/userprofiles/${userId}/follow`)
+        },
+        onSuccess: () => {
+            queryClient.setQueryData(['profile', userId], (profile: Profile) => {
+                if (!profile || profile.followersCount === undefined) return profile;
+
+                return {
+                    ...profile,
+                    following: !profile.following,
+                    followersCount: profile.following
+                        ? profile.followersCount - 1
+                        : profile.followersCount + 1
+                } as Profile;
+            })
+        }
+    });
+
     const isCurrentUser = useMemo(() => userId === queryClient.getQueryData<User>(['user'])?.id, [userId, queryClient]);
 
     return {
@@ -122,6 +141,7 @@ export const useProfile = (userId?: string) => {
         setMainPhoto,
         updateProfile,
         deletePhoto,
+        updateFollowing,
         isCurrentUser
     }
 };
