@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 
 export default class UIStore {
     isLoading: boolean = false;
+    activeTab: number = 0; // About
 
     constructor() {
         makeAutoObservable(this);
@@ -13,5 +14,9 @@ export default class UIStore {
 
     isIdle = () => {
         this.isLoading = false;
+    }
+
+    setActiveProfileTab = (activetab: number) => {
+        this.activeTab = activetab;
     }
 }

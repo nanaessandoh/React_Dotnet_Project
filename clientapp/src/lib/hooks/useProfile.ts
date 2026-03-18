@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 import { useMemo } from "react";
 
-export const useProfile = (userId?: string) => {
+export const useProfile = (userId?: string, followingType?: FollowingType) => {
     const queryClient = useQueryClient();
 
     const { data: profile, isLoading: loadingProfile } = useQuery<Profile>({
@@ -11,7 +11,7 @@ export const useProfile = (userId?: string) => {
             const response = await agent.get<Profile>(`/userprofiles/${userId}`);
             return response.data;
         },
-        enabled: !!userId
+        enabled: !!userId && !followingType
     });
 
     const { data: photos, isLoading: loadingPhotos } = useQuery({
@@ -20,7 +20,16 @@ export const useProfile = (userId?: string) => {
             const response = await agent.get<Photo[]>(`/userprofiles/${userId}/photos`);
             return response.data;
         },
-        enabled: !!userId
+        enabled: !!userId && !followingType
+    });
+
+    const { data: followings, isLoading: loadingFollowings } = useQuery<Profile[]>({
+        queryKey: ['followings', userId, followingType],
+        queryFn: async () => {
+            const response = await agent.get<Profile[]>(`/userprofiles/${userId}/follow-list?type=${followingType}`);
+            return response.data;
+        },
+        enabled: !!userId && !!followingType
     });
 
     const uploadPhoto = useMutation({
@@ -117,6 +126,7 @@ export const useProfile = (userId?: string) => {
         },
         onSuccess: () => {
             queryClient.setQueryData(['profile', userId], (profile: Profile) => {
+                queryClient.invalidateQueries({ queryKey: ["followings", userId, "followers"] })
                 if (!profile || profile.followersCount === undefined) return profile;
 
                 return {
@@ -142,6 +152,8 @@ export const useProfile = (userId?: string) => {
         updateProfile,
         deletePhoto,
         updateFollowing,
+        followings,
+        loadingFollowings,
         isCurrentUser
     }
 };

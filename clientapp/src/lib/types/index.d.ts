@@ -77,3 +77,5 @@ type ChatComment = {
     displayName: string
     imageUrl?: string
 }
+
+type FollowingType = "following" | "followers";
