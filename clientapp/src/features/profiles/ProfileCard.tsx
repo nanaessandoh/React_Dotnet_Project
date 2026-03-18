@@ -12,12 +12,12 @@ const ProfileCard = ({ profile }: Props) => {
         <Link to={`/profiles/${profile.userId}`} style={{ textDecoration: 'none' }}>
             <Card
                 elevation={4}
-                sx={{ maxWidth: 300, borderRadius: 3, p: 3, textDecoration: 'none' }}
+                sx={{ maxWidth: 250, borderRadius: 3, p: 3, textDecoration: 'none' }}
             >
                 <CardMedia
                     component="img"
                     src={profile?.imageUrl || '/images/user.png'}
-                    sx={{ width: "100%", zIndex: 50 }}
+                    sx={{ width: "100%", maxHeight: '150px' }}
                     alt={profile.displayName + " image"}
                 />
                 <CardContent>

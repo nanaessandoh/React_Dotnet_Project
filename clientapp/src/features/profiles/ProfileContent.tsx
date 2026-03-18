@@ -1,21 +1,24 @@
 import { Box, Paper, Tab, Tabs } from '@mui/material';
-import React, { SyntheticEvent, useState } from 'react'
+import { SyntheticEvent } from 'react'
 import ProfilePhotos from './ProfilePhotos';
 import ProfileAbout from './ProfileAbout';
+import { useStore } from '../../lib/hooks/useStore';
+import { observer } from 'mobx-react-lite';
+import ProfileFollowings from './ProfileFollowings';
 
-const ProfileContent = () => {
-    const [value, setValue] = useState(0);
+const ProfileContent = observer(function ProfileContent() {
+    const { uiStore } = useStore();
 
     const tabContent = [
         { label: 'About', content: <ProfileAbout /> },
         { label: 'Photos', content: <ProfilePhotos /> },
         { label: 'Events', content: <div>Events content</div> },
-        { label: 'Followers', content: <div>Followers content</div> },
-        { label: 'Following', content: <div>Following content</div> }
+        { label: 'Followers', content: <ProfileFollowings /> },
+        { label: 'Following', content: <ProfileFollowings /> }
     ];
 
     const handleTabChange = (_: SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+        uiStore.setActiveProfileTab(newValue);
     }
 
     return (
@@ -29,7 +32,7 @@ const ProfileContent = () => {
         >
             <Tabs
                 orientation="vertical"
-                value={value}
+                value={uiStore.activeTab}
                 onChange={handleTabChange}
                 sx={{ borderRight: 1, height: 450, minWidth: 200 }}
             >
@@ -40,10 +43,10 @@ const ProfileContent = () => {
             <Box
                 sx={{ flexGrow: 1, p: 3, pt: 0 }}
             >
-                {tabContent[value].content}
+                {tabContent[uiStore.activeTab].content}
             </Box>
         </Box>
     )
-}
+});
 
 export default ProfileContent
